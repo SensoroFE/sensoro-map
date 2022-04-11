@@ -13,6 +13,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "start": "dumi dev",
+    "site": "dumi build",
     "build": "father-build",
     "release": "walrus release",
     "release:next": "walrus release --tag next"
