@@ -70,7 +70,7 @@ const areaStyleMap = {
 
 const getValue = (value) => {
   // 优先取value
-  if (value?.features?.geometry?.coordinates) {
+  if (value?.Polygon) {
     return transformGeoJsonToPolygon?.(value);
   } else if (Array?.isArray(value)) {
     return value;
@@ -167,9 +167,10 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     setInternalValue(getValue(value));
   }, [value]);
 
+  // infoWindow
   const position = useMemo(() => {
     if (internalValue?.length > 0) {
-      // 左边靠南的坐标
+      // 最靠南的坐标
       const [longitude, latitude] = internalValue?.[0];
       let position = {
         longitude,
@@ -199,7 +200,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const setInternalValueCal = useCallback(
     (nextValue: [number, number][] = []) => {
       setInternalValue(nextValue);
-      console.log("onchenge----", nextValue);
+
       onChange?.(transformPolygonToGeoJson(nextValue));
     },
     [setInternalValue]
@@ -221,7 +222,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   // 动态更新设备点位信息
   useEffect(() => {
     // setInternalValue([]);
-    removeOverLayer();
+    // removeOverLayer();
 
     let devices = [];
 
@@ -272,7 +273,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     const mouseTool = mouseToolInstance.current;
     setDraw(false);
     if (mouseTool) {
-      mouseTool.close();
+      mouseTool.close(true);
     }
   };
   /**
@@ -287,10 +288,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
 
     // 关闭绘制
     handleDrawClose();
-    console.log(
-      data?.getPath()?.map((i) => [i?.lng, i?.lat]),
-      "data?.getPath()?.map((i) => [i?.lng, i?.lat])"
-    );
+
     // todo 存储 图形区域数据
     setInternalValueCal(data?.getPath()?.map((i) => [i?.lng, i?.lat]));
   };
@@ -299,17 +297,12 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     setInternalValueCal([]);
   };
   const bindEvent = (instance) => {
-    console.log("ccc8888");
     instance?.on?.("mouseover", onMouseover);
     instance?.on?.("mouseout", onMouseout);
   };
   const unBindEvent = (instance) => {
     instance?.off?.("mouseover", onMouseover);
     instance?.off?.("mouseout", onMouseout);
-  };
-
-  const handleThemeStatusChange = (status: boolean) => {
-    setThemeStatus(status);
   };
 
   const renderMarkerCluster = useMemo(() => {
@@ -344,6 +337,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
       />
     );
   }, [JSON.stringify(sourceDevices)]);
+
   const handleDrawTypeChange = (value: OperationType, options: any = {}) => {
     const mouseTool = mouseToolInstance.current;
 
@@ -385,16 +379,26 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     },
   };
   const polyGonEvents = {
-    created: (tool) => {
-      overLayerInstance.current = tool;
-    },
     mouseover: onMouseover,
-
     mouseout: onMouseout,
   };
-  console.log(position, !!visible, internalValue?.length, "bbbb9999");
+  const showInfoWindow = useMemo(() => {
+    return !!visible && internalValue?.length > 0;
+  }, [visible, internalValue]);
+
   return (
     <>
+      <div
+        onClick={() =>
+          setInternalValue([
+            [116.403322, 39.920255],
+            [116.410703, 39.897555],
+            [116.402292, 39.892353],
+          ])
+        }
+      >
+        切换
+      </div>
       <Theme
         defaultStatus={themeStatus}
         style={{ marginRight: 8 }}
@@ -405,7 +409,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
       />
       <InfoWindow
         position={position}
-        visible={!!visible && internalValue?.length > 0}
+        visible={showInfoWindow}
         offset={[40, 0]}
         isCustom
       >
@@ -436,14 +440,12 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
         }}
       />
       {!readonly && <MouseTool events={toolEvents} />}
-      {!draw && (
-        <Polygon
-          events={polyGonEvents}
-          path={internalValue}
-          style={options?.["default"]}
-        />
-      )}
-
+      <Polygon
+        events={polyGonEvents}
+        path={internalValue}
+        visible={!draw}
+        style={options?.["default"]}
+      />
       {renderMarkerCluster}
     </>
   );

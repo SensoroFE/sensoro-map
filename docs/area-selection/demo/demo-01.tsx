@@ -16,7 +16,7 @@ export default () => {
         [116.389846, 39.891365],
       ]}
       onChange={(value) => {
-        console.log(value, JSON.stringify(value), "onChange---");
+        console.log(value, "onChange---");
       }}
     />
   );
