@@ -74,6 +74,8 @@ const getValue = (value) => {
     return transformGeoJsonToPolygon?.(value);
   } else if (Array?.isArray(value)) {
     return value;
+  } else {
+    return [];
   }
 };
 
@@ -97,7 +99,7 @@ export interface AreaDeviceSelectionProps {
   /**
    * 选中的设备集合
    */
-  value?: string[];
+  value?: [number, number][];
   /**
    * 指定设备中唯一标识，只针对于灵思设备，请谨慎设置
    * @default `cid`
@@ -167,7 +169,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     setInternalValue(getValue(value));
   }, [value]);
 
-  // infoWindow
+  // infoWindow lnglat
   const position = useMemo(() => {
     if (internalValue?.length > 0) {
       // 最靠南的坐标
@@ -205,25 +207,9 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     },
     [setInternalValue]
   );
-  // 绑定图形工具事件
-  useEffect(() => {
-    if (mousePolyGonInstance.current) {
-      mousePolyGonInstance.current?.on("mouseover", onMouseover);
-      mousePolyGonInstance.current?.on("mouseout", onMouseout);
-    }
-    return () => {
-      if (mousePolyGonInstance.current) {
-        mousePolyGonInstance.current?.off("mouseover", onMouseover);
-        mousePolyGonInstance.current?.off("mouseout", onMouseout);
-      }
-    };
-  }, [mousePolyGonInstance.current]);
 
   // 动态更新设备点位信息
   useEffect(() => {
-    // setInternalValue([]);
-    // removeOverLayer();
-
     let devices = [];
 
     if (transformData) {
@@ -259,11 +245,13 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const onMouseover = (e) => {
     setVisible(1);
     overLayerInstance?.current?.setOptions?.(options?.["hover"]);
+    mousePolyGonInstance?.current?.setOptions?.(options?.["hover"]);
   };
   const onMouseout = (e) => {
     setTimeout(() => {
       setVisible((o) => (o === 2 ? o : 0));
       overLayerInstance?.current?.setOptions?.(options?.["default"]);
+      mousePolyGonInstance?.current?.setOptions?.(options?.["default"]);
     }, 300);
   };
   /**
@@ -379,6 +367,11 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     },
   };
   const polyGonEvents = {
+    created: (instance) => {
+      if (!readonly) {
+        mousePolyGonInstance.current = instance;
+      }
+    },
     mouseover: onMouseover,
     mouseout: onMouseout,
   };
@@ -388,17 +381,6 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
 
   return (
     <>
-      <div
-        onClick={() =>
-          setInternalValue([
-            [116.403322, 39.920255],
-            [116.410703, 39.897555],
-            [116.402292, 39.892353],
-          ])
-        }
-      >
-        切换
-      </div>
       <Theme
         defaultStatus={themeStatus}
         style={{ marginRight: 8 }}
@@ -407,30 +389,35 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
         })}
         onStatusChange={() => setThemeStatus(true)}
       />
-      <InfoWindow
-        position={position}
-        visible={showInfoWindow}
-        offset={[40, 0]}
-        isCustom
-      >
-        <div
-          className={`${prefixCls}-info-window`}
-          onMouseEnter={() => setVisible(2)}
-          onMouseLeave={() => {
-            setTimeout(() => {
-              setVisible((o) => (o === 1 ? o : 0));
-            }, 300);
-          }}
-          onClick={() => {
-            handleClear?.();
-            handleDrawTypeChange?.("polygon", options?.["default"]);
-            unBindEvent?.(overLayerInstance);
-          }}
+      {!readonly && (
+        <InfoWindow
+          position={position}
+          visible={showInfoWindow}
+          offset={[40, 0]}
+          isCustom
         >
-          <Icon type="icon-aim" className={`${prefixCls}-info-window-icon`} />
-          <span className={`${prefixCls}-info-window-text`}>删除区域</span>
-        </div>
-      </InfoWindow>
+          <div
+            className={`${prefixCls}-info-window`}
+            onMouseEnter={() => setVisible(2)}
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setVisible((o) => (o === 1 ? o : 0));
+              }, 300);
+            }}
+            onClick={() => {
+              handleClear?.();
+              handleDrawTypeChange?.("polygon", options?.["default"]);
+              unBindEvent?.(overLayerInstance);
+            }}
+          >
+            <Icon type="icon-aim" className={`${prefixCls}-info-window-icon`} />
+            <span className={`${prefixCls}-info-window-text`}>删除区域</span>
+          </div>
+        </InfoWindow>
+      )}
+
+      {!readonly && <MouseTool events={toolEvents} />}
+
       <Tools
         showList={sourceDevices.length ? ["center", "zooms"] : ["zooms"]}
         onGeoClick={() => {
@@ -439,7 +426,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
           }
         }}
       />
-      {!readonly && <MouseTool events={toolEvents} />}
+
       <Polygon
         events={polyGonEvents}
         path={internalValue}
