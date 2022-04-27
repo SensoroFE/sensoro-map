@@ -5,7 +5,7 @@ import { ConfigContext } from "../config-provider";
 import AreaDeviceSelection from "./area-device-selection";
 import type { AreaDeviceSelectionProps } from "./area-device-selection";
 import "./style";
-
+export type { AreaDeviceSelectionProps as AreaSelectionProps };
 export const AreaSelection: React.FC<AreaDeviceSelectionProps> = ({
   className,
   style,

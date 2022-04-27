@@ -6,7 +6,7 @@ export default () => {
   return (
     <AreaSelection
       readonly
-      mode="FORBIDDEN_AREA"
+      mode={"FORBIDDEN_AREA"}
       style={{ width: 550, height: 300 }}
       value={[
         [116.464877, 40.01446],

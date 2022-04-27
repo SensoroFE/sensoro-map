@@ -14,12 +14,17 @@ export default () => {
 
   const handleSetData = () => {
     form.setFieldsValue({
-      path: [
-        [116.078881, 40.041531],
-        [116.076232, 39.766118],
-        [116.403458, 39.769173],
-        [116.392859, 40.050658],
-      ],
+      path: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.466689, 40.000484],
+            [116.464576, 39.979757],
+            [116.510816, 39.976522],
+            [116.500263, 39.99681],
+          ],
+        ],
+      },
     });
   };
 
@@ -31,12 +36,10 @@ export default () => {
     <Form form={form}>
       <Item
         name="path"
-        initialValue={[
-          [116.460046, 40.001037],
-          [116.459407, 39.958176],
-          [116.53292, 39.956951],
-          [116.508629, 39.993447],
-        ]}
+        initialValue={{
+          type: "Polygon",
+          coordinates: [[]],
+        }}
       >
         <AreaSelection
           style={{ height: 500 }}
