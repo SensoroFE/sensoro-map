@@ -14,7 +14,7 @@ import {
 } from "@pansy/react-amap";
 import type { PolygonProps } from "@pansy/react-amap/es/polygon";
 import { Theme } from "../map";
-import Icon from "@sensoro/sensoro-design/es/icon";
+import DeleteOutlined from "@sensoro-design/icons/DeleteOutlined";
 import classNames from "@pansy/classnames";
 import { Tools, Marker, ClusterMarker } from "./components";
 import type {
@@ -114,10 +114,6 @@ export interface AreaDeviceSelectionProps {
    */
   list?: ServerDeviceInfo[] | DeviceInfo[];
   /**
-   * 国标设备集合
-   */
-  listGB?: ServerDeviceInfo[] | DeviceInfo[];
-  /**
    * 是否需要处理数据
    * 使用场景上层组件已调用utils中的转换数据的方法
    */
@@ -137,7 +133,6 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   deviceKey,
   transformData,
   list = [],
-  listGB = [],
   value,
   mode = "FENCING",
   themeStatus,
@@ -217,10 +212,9 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
         ...((list || []) as ServerDeviceInfo[])?.map((item) =>
           transformSenServerData(item, deviceKey)
         ),
-        ...((listGB || []) as ServerDeviceInfo[])?.map?.(transformGBServerData),
       ];
     } else {
-      devices = [...list, ...listGB];
+      devices = [...list];
     }
 
     // marker实例 点渲染
@@ -240,7 +234,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
         return item.lnglat && item.lnglat[0] && item.key;
       })
     );
-  }, [JSON.stringify(list), JSON.stringify(listGB)]);
+  }, [JSON.stringify(list)]);
 
   const onMouseover = (e) => {
     setVisible(1);
@@ -381,14 +375,6 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
 
   return (
     <>
-      <Theme
-        defaultStatus={themeStatus}
-        style={{ marginRight: 8 }}
-        className={classNames(`${prefixCls}-item`, {
-          [`${prefixCls}-active`]: themeStatus,
-        })}
-        onStatusChange={() => setThemeStatus(true)}
-      />
       {!readonly && (
         <InfoWindow
           position={position}
@@ -410,7 +396,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
               unBindEvent?.(overLayerInstance);
             }}
           >
-            <Icon type="icon-aim" className={`${prefixCls}-info-window-icon`} />
+            <DeleteOutlined className={`${prefixCls}-info-window-icon`} />
             <span className={`${prefixCls}-info-window-text`}>删除区域</span>
           </div>
         </InfoWindow>
