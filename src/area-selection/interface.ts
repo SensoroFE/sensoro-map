@@ -13,6 +13,10 @@ export enum Mode {
   FENCING = "FENCING",
 }
 
+export interface GeoJson {
+  type: "Polygon";
+  coordinates: ([] | [number, number][])[];
+}
 export interface ChannelBaseInfo {
   // 通道编号
   channel: string | number;

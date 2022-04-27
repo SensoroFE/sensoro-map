@@ -22,6 +22,7 @@ import type {
   ServerDeviceInfo,
   OperationType,
   Mode,
+  GeoJson,
 } from "./interface";
 import {
   transformGBServerData,
@@ -70,7 +71,7 @@ const areaStyleMap = {
 
 const getValue = (value) => {
   // 优先取value
-  if (value?.Polygon) {
+  if (value?.type === "Polygon") {
     return transformGeoJsonToPolygon?.(value);
   } else if (Array?.isArray(value)) {
     return value;
@@ -99,7 +100,7 @@ export interface AreaDeviceSelectionProps {
   /**
    * 选中的设备集合
    */
-  value?: [number, number][];
+  value?: [number, number][] | GeoJson | [];
   /**
    * 指定设备中唯一标识，只针对于灵思设备，请谨慎设置
    * @default `cid`
@@ -160,13 +161,18 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const [draw, setDraw] = useState<boolean>(false);
   const options = areaStyleMap?.[mode];
 
+  // 空数组和空都是空数据
+  const isEmptyData =
+    (Array.isArray(internalValue) && internalValue?.length === 0) ||
+    !internalValue;
+
   useEffect(() => {
     setInternalValue(getValue(value));
   }, [value]);
 
   // infoWindow lnglat
   const position = useMemo(() => {
-    if (internalValue?.length > 0) {
+    if (Array.isArray(internalValue) && internalValue?.length > 0) {
       // 最靠南的坐标
       const [longitude, latitude] = internalValue?.[0];
       let position = {
@@ -352,7 +358,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const toolEvents = {
     created: (tool) => {
       mouseToolInstance.current = tool;
-      if (!internalValue) {
+      if (isEmptyData) {
         handleDrawTypeChange?.("polygon", options?.["default"]);
       }
     },
@@ -370,8 +376,8 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     mouseout: onMouseout,
   };
   const showInfoWindow = useMemo(() => {
-    return !!visible && internalValue?.length > 0;
-  }, [visible, internalValue]);
+    return !!visible && !isEmptyData;
+  }, [visible, isEmptyData]);
 
   return (
     <>

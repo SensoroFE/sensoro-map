@@ -29,15 +29,7 @@ export default () => {
 
   return (
     <Form form={form}>
-      <Item
-        name="path"
-        initialValue={[
-          [116.460046, 40.001037],
-          [116.459407, 39.958176],
-          [116.53292, 39.956951],
-          [116.508629, 39.993447],
-        ]}
-      >
+      <Item name="path" initialValue={null}>
         <AreaSelection
           style={{ height: 500 }}
           deviceKey="sn"
