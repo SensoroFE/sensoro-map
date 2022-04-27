@@ -39,6 +39,5 @@ group:
 | transformData | 是否做数据处理                                 | boolean                   | true      | --   |
 | deviceKey     | 指定灵思设备的唯一标识                         | string                    | `cid`     | --   |
 | list          | 设备集合                                       | Array                     | --        | --   |
-| listGB        | 国标设备集合                                   | Array                     | --        | --   |
 | onChange      | 选择设备改变的回调                             | (value: string[]) => void | --        | --   |
 | mode          | 模式 "FORBIDDEN_AREA" (禁区) "FENCING"（围栏） | string                    | "FENCING" | --   |

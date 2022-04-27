@@ -3237,6 +3237,22 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@sensoro-design/icons-svg@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npmmirror.com/@sensoro-design/icons-svg/-/icons-svg-1.3.1.tgz#0a5f46a38071934c767ac71e525c780a1ea8da37"
+  integrity sha512-ODNJu2w7vcCSRqcd2CpVcB4GLGeHADENM/nC6pKaioNnJub2MZaP+MFC/dZnLuk1owtay8AHETMJP2rMAneoYw==
+
+"@sensoro-design/icons@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npmmirror.com/@sensoro-design/icons/-/icons-1.3.1.tgz#2a746d6990d59f5276a7c29bf1e807d587e0d53a"
+  integrity sha512-0QsDlx28QQ4n/rWqcFKSqIztL4vBUg5872SgW/h+STqRE1SHeI7zAQnX598FSL+oVm1V4o31Q5UGA1pgRpDmaw==
+  dependencies:
+    "@ant-design/colors" "^6.0.0"
+    "@babel/runtime" "^7.11.2"
+    "@pansy/classnames" "^1.0.1"
+    "@sensoro-design/icons-svg" "1.3.1"
+    rc-util "^5.19.3"
+
 "@sensoro/sensoro-design@^2.0.0":
   version "2.6.3"
   resolved "https://registry.npmmirror.com/@sensoro/sensoro-design/-/sensoro-design-2.6.3.tgz#600e2feffe74f9de910200e52a5b76152bb07969"
@@ -11970,7 +11986,7 @@ rc-upload@~4.3.0:
     classnames "^2.2.5"
     rc-util "^5.2.0"
 
-rc-util@^5.0.0, rc-util@^5.0.1, rc-util@^5.0.5, rc-util@^5.0.6, rc-util@^5.12.0, rc-util@^5.13.0, rc-util@^5.13.1, rc-util@^5.15.0, rc-util@^5.16.1, rc-util@^5.17.0, rc-util@^5.19.2, rc-util@^5.2.0, rc-util@^5.2.1, rc-util@^5.21.0, rc-util@^5.3.0, rc-util@^5.4.0, rc-util@^5.5.0, rc-util@^5.6.1, rc-util@^5.7.0, rc-util@^5.8.0, rc-util@^5.8.1, rc-util@^5.9.4, rc-util@^5.9.8:
+rc-util@^5.0.0, rc-util@^5.0.1, rc-util@^5.0.5, rc-util@^5.0.6, rc-util@^5.12.0, rc-util@^5.13.0, rc-util@^5.13.1, rc-util@^5.15.0, rc-util@^5.16.1, rc-util@^5.17.0, rc-util@^5.19.2, rc-util@^5.19.3, rc-util@^5.2.0, rc-util@^5.2.1, rc-util@^5.21.0, rc-util@^5.3.0, rc-util@^5.4.0, rc-util@^5.5.0, rc-util@^5.6.1, rc-util@^5.7.0, rc-util@^5.8.0, rc-util@^5.8.1, rc-util@^5.9.4, rc-util@^5.9.8:
   version "5.21.2"
   resolved "https://registry.npmmirror.com/rc-util/-/rc-util-5.21.2.tgz#fa23277ba84e5561af2febdca64de3fc2b3e1528"
   integrity sha512-QuuZ2tKMScGtxSx3rLzgPGGDZm/np7phMqA7OcDidSf44abvSk+AdtdD7ZvQPvCEtdC6nCSI5tEVnUaYjjD9/w==
