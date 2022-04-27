@@ -1,6 +1,7 @@
 import React from "react";
 import { AreaSelection } from "@sensoro/sensoro-map";
 import { devices } from "./data-source";
+import { Mode } from "@sensoro/sensoro-map/es/area-selection/interface";
 
 export default () => {
   return (
@@ -8,7 +9,7 @@ export default () => {
       style={{ height: 500 }}
       deviceKey="sn"
       list={devices}
-      mode="FORBIDDEN_AREA"
+      mode={Mode.FORBIDDEN_AREA}
       value={[
         [116.464877, 40.01446],
         [116.46224, 39.984772],
