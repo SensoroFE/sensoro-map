@@ -298,7 +298,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
 
     return (
       <MarkerCluster
-        data={sourceDevices.map((item) => ({ ...item }))}
+        data={sourceDevices.map((item) => ({ ...item })) as any}
         render={(data: DeviceInfo) => {
           return <Marker info={data} />;
         }}
