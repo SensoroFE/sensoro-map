@@ -49,7 +49,7 @@ export interface ServerDeviceInfo {
   /**
    * 设备地址
    */
-  address: string;
+  address?: string;
   /**
    * 设备经纬度
    */
@@ -63,7 +63,7 @@ export interface ServerDeviceInfo {
    *   online: 注册-在线
    *   offline: 注册-离线
    */
-  status: DeviceStatus | GBDeviceStatus;
+  status?: DeviceStatus | GBDeviceStatus;
   /**
    * 设备使用类型，决定显示的Icon
    * 国标设备强制使用 普通网络摄像机
@@ -78,26 +78,26 @@ export interface DeviceInfo {
   // 设备编号
   sn: string;
   // 唯一标识
-  key: string;
+  key?: string;
   // 设备名称
-  title: string;
+  title?: string;
   // 左侧操作配置
   menus?: MenuData[];
   // 设备类型
-  type: "GB" | "SENSORO";
+  type?: "GB" | "SENSORO";
   // 设备经纬度 - 前端使用
-  position: {
+  position?: {
     longitude: number;
     latitude: number;
   };
   // 设备经纬度 - 前端使用
-  lnglat: [number, number];
+  lnglat?: [number, number];
   titleIcon?: IconFontProps;
   // 设备状态
   status: DeviceStatus;
   deviceUsageType: DeviceUsageType;
   // 是否已选中，前端需要
-  selected: boolean;
+  selected?: boolean;
   flvUrl?: string;
   m3u8Url?: string;
   playable?: boolean;
