@@ -100,5 +100,5 @@ export const transformPolygonToGeoJson = (path: [number, number][] | []) => {
   return geoJSON;
 };
 export const transformGeoJsonToPolygon = (data: any) => {
-  return data?.features?.geometry?.coordinates?.[0] || [];
+  return data?.coordinates?.[0] || [];
 };
