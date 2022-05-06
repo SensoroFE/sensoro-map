@@ -74,6 +74,7 @@ export const AreaSelection: React.FC<AreaDeviceSelectionProps> = ({
         })}
         style={style}
         features={themeStatus ? [] : ["bg", "point", "road"]}
+        cursor={draw ? "crosshair" : "default"}
       >
         <AreaDeviceSelection
           prefixCls={prefixCls}

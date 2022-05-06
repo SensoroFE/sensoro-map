@@ -441,8 +441,8 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
           className={`${prefixCls}-info-tips`}
           style={{
             position: "absolute",
-            left: mouseState?.position?.x,
-            top: mouseState?.position?.y,
+            left: mouseState?.position?.x - 8,
+            top: mouseState?.position?.y + 12,
           }}
         >
           <span className={`${prefixCls}-info-tips-text`}>{tips}</span>
