@@ -13,7 +13,7 @@ import {
   Polygon,
 } from "@pansy/react-amap";
 import type { PolygonProps } from "@pansy/react-amap/es/polygon";
-import { Theme } from "../map";
+import { Theme, SearchAddress } from "../map";
 import DeleteOutlined from "@sensoro-design/icons/DeleteOutlined";
 import classNames from "@pansy/classnames";
 import { Tools, Marker, ClusterMarker } from "./components";
@@ -126,6 +126,13 @@ export interface AreaDeviceSelectionProps {
   // 内部使用
   themeStatus?: boolean;
   setThemeStatus?: (status: boolean) => void;
+  setDraw: (value: boolean) => void;
+  draw: boolean;
+  mouseState: {
+    state: "stop" | "start" | "drawing";
+    position: { x: number; y: number };
+  };
+  tips: string;
 }
 
 export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
@@ -139,10 +146,22 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   themeStatus,
   setThemeStatus,
   onChange,
+  draw,
+  setDraw,
+  mouseState,
+  tips,
 }) => {
   const { map } = useMap();
   /** 聚合插件的实例 */
   const cluster = useRef<AMap.MarkerCluster>(null);
+  const mapRef = useRef<any>(null);
+  const [mouseInfo, setMouseInfo] = useState<{
+    drawState?: "start" | "running" | "stop";
+    tips?: string;
+  }>({
+    drawState: "stop",
+    tips: "",
+  });
   // 所有标记点实例的集合
   const markersInstance = useRef<AMap.Marker[]>([]);
   // 鼠标工具插件实例
@@ -158,7 +177,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     return getValue(value);
   });
   const [visible, setVisible] = useState<number>(0);
-  const [draw, setDraw] = useState<boolean>(false);
+
   const options = areaStyleMap?.[mode];
 
   // 空数组和空都是空数据
@@ -260,6 +279,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const handleDrawClose = () => {
     const mouseTool = mouseToolInstance.current;
     setDraw(false);
+    setMouseInfo((o) => ({ ...o, drawState: "stop" }));
     if (mouseTool) {
       mouseTool.close(true);
     }
@@ -271,14 +291,19 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   const handleDrawEnd = (data: any) => {
     overLayerInstance.current = data;
 
-    //  绑定事件
-    bindEvent(data);
+    const length = data?.getPath()?.map((i) => [i?.lng, i?.lat])?.length || 0;
 
-    // 关闭绘制
-    handleDrawClose();
+    if (length >= 3) {
+      //  绑定事件
+      bindEvent(data);
+      // todo 存储 图形区域数据
+      setInternalValueCal(data?.getPath()?.map((i) => [i?.lng, i?.lat]));
 
-    // todo 存储 图形区域数据
-    setInternalValueCal(data?.getPath()?.map((i) => [i?.lng, i?.lat]));
+      handleDrawClose();
+    } else {
+      // 画直线清除重来
+      handleClear();
+    }
   };
   const handleClear = () => {
     removeOverLayer();
@@ -331,6 +356,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
 
     if (!mouseTool || !value) return;
     setDraw(true);
+    setMouseInfo((o) => ({ ...o, drawState: "start" }));
 
     removeOverLayer();
 
@@ -380,13 +406,16 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
   }, [visible, isEmptyData]);
 
   return (
-    <>
+    <div ref={mapRef}>
+      <SearchAddress size="middle" />
+      <div className={`${prefixCls}-move-tip`}>{}</div>
       {!readonly && (
         <InfoWindow
           position={position}
           visible={showInfoWindow}
           offset={[40, 0]}
           isCustom
+          key="delete"
         >
           <div
             className={`${prefixCls}-info-window`}
@@ -407,11 +436,23 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
           </div>
         </InfoWindow>
       )}
+      {draw && mouseState?.position?.x > 0 && mouseState?.position?.y > 0 && (
+        <div
+          className={`${prefixCls}-info-tips`}
+          style={{
+            position: "absolute",
+            left: mouseState?.position?.x,
+            top: mouseState?.position?.y,
+          }}
+        >
+          <span className={`${prefixCls}-info-tips-text`}>{tips}</span>
+        </div>
+      )}
 
       {!readonly && <MouseTool events={toolEvents} />}
 
       <Tools
-        showList={sourceDevices.length ? ["center", "zooms"] : ["zooms"]}
+        showList={sourceDevices?.length ? ["center", "zooms"] : ["zooms"]}
         onGeoClick={() => {
           if (map && markersInstance.current) {
             map.setFitView(markersInstance.current);
@@ -426,7 +467,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
         style={options?.["default"]}
       />
       {renderMarkerCluster}
-    </>
+    </div>
   );
 };
 AreaDeviceSelection.defaultProps = {
