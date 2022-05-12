@@ -1,9 +1,7 @@
-import React, { FC } from 'react';
-import classNames from '@pansy/classnames';
-import { useMap } from '@pansy/react-amap';
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import Icon from '@sensoro/sensoro-design/es/icon';
-import { LngLatArray } from '../../../../map/types';
+import React, { FC } from "react";
+import { useMap } from "@pansy/react-amap";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import { LngLatArray } from "../../../../map/types";
 
 interface ToolsProps {
   prefixCLs?: string;
@@ -21,17 +19,8 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
     map?.zoomOut();
   };
 
-  const handleGeoClick = () => {
-    if (position?.[0]) {
-      map?.setCenter(position);
-    }
-  };
-
   return (
     <div className={prefixCLs}>
-      <div className={classNames(`${prefixCLs}-geo`, `${prefixCLs}-item`)} onClick={handleGeoClick}>
-        <Icon type="icon-aim" />
-      </div>
       <div className={`${prefixCLs}-zooms`}>
         <div className={`${prefixCLs}-item`} onClick={handlePlusClick}>
           <PlusOutlined />
@@ -45,7 +34,7 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
 };
 
 Tools.defaultProps = {
-  prefixCLs: 'sen-map-position-tools'
+  prefixCLs: "sen-map-position-tools",
 };
 
 export default Tools;
