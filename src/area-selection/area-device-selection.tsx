@@ -79,8 +79,7 @@ const getValue = (value) => {
     return [];
   }
 };
-
-export interface AreaDeviceSelectionProps {
+export interface AreaDeviceSelectionBase {
   /**
    * 样式类的前缀
    */
@@ -123,6 +122,9 @@ export interface AreaDeviceSelectionProps {
    * 设备选择变化的回调
    */
   onChange?: (value: any) => void;
+}
+
+export interface AreaDeviceSelectionProps extends AreaDeviceSelectionBase {
   // 内部使用
   themeStatus?: boolean;
   setThemeStatus?: (status: boolean) => void;
@@ -227,6 +229,34 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     },
     [setInternalValue]
   );
+  // 获取自适应数据
+  const coordinateData = useMemo(() => {
+    if (Array.isArray(internalValue) && internalValue.length > 0) {
+      return internalValue;
+    } else if (Array.isArray(list) && list.length > 0) {
+      return list?.map((i) => [i?.lng, i?.lat]);
+    } else {
+      return undefined;
+    }
+  }, [internalValue, list]);
+  // 设置 自适应 到地图窗口
+  useEffect(() => {
+    // marker实例 点渲染
+    if (coordinateData) {
+      markersInstance.current = coordinateData?.map?.(
+        (item: [number, number]) => {
+          return new AMap.Marker({
+            position: item,
+          });
+        }
+      );
+
+      // 设置 自适应 到地图窗口
+      if (map) {
+        map.setFitView(markersInstance.current);
+      }
+    }
+  }, [coordinateData]);
 
   // 动态更新设备点位信息
   useEffect(() => {
@@ -240,18 +270,6 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
       ];
     } else {
       devices = [...list];
-    }
-
-    // marker实例 点渲染
-    markersInstance.current = devices.map((item) => {
-      return new AMap.Marker({
-        position: [item.position.longitude, item.position.latitude],
-      });
-    });
-
-    // 设置 自适应 到地图窗口
-    if (map) {
-      map.setFitView(markersInstance.current);
     }
 
     setSourceDevices(
@@ -405,6 +423,24 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
     return !!visible && !isEmptyData;
   }, [visible, isEmptyData]);
 
+  const showInfoTips = useMemo(() => {
+    if (draw) {
+      if (
+        mouseState?.position?.x > 0 &&
+        mouseState?.position?.y > 0 &&
+        mouseState?.position?.x < 230 &&
+        mouseState?.position?.y < 38
+      ) {
+        return false;
+      } else if (mouseState?.position?.x > 0 && mouseState?.position?.y > 0) {
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }, [draw, mouseState?.position]);
+
   return (
     <div ref={mapRef}>
       <SearchAddress size="middle" />
@@ -436,7 +472,7 @@ export const AreaDeviceSelection: React.FC<AreaDeviceSelectionProps> = ({
           </div>
         </InfoWindow>
       )}
-      {draw && mouseState?.position?.x > 0 && mouseState?.position?.y > 0 && (
+      {draw && showInfoTips && (
         <div
           className={`${prefixCls}-info-tips`}
           style={{
