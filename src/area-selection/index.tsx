@@ -3,16 +3,16 @@ import classNames from "@pansy/classnames";
 import { Map } from "../map";
 import { ConfigContext } from "../config-provider";
 import AreaDeviceSelection from "./area-device-selection";
-import type { AreaDeviceSelectionProps } from "./area-device-selection";
+import type { AreaDeviceSelectionBase } from "./area-device-selection";
 import "./style";
-export type { AreaDeviceSelectionProps as AreaSelectionProps };
+export type { AreaDeviceSelectionBase as AreaSelectionProps };
 
 const stateMapTips = {
   start: "单击地图绘制范围",
   drawing: "双击左键结束绘制",
   stop: "",
 };
-export const AreaSelection: React.FC<AreaDeviceSelectionProps> = ({
+export const AreaSelection: React.FC<AreaDeviceSelectionBase> = ({
   className,
   style,
   ...rest
