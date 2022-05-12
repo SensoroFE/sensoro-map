@@ -4,14 +4,14 @@ import {
   Map,
   SearchAddress,
   Theme
-} from '../map';
+} from '../../map';
 import { Geocoder, Marker } from '@pansy/react-amap';
 import { MapProps } from '@pansy/react-amap/es/map';
 import { MarkerProps } from '@pansy/react-amap/es/marker';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { ConfigContext } from '../config-provider';
 import { Tools } from './components';
-import { LngLatArray } from '../map/types';
+import { LngLatArray } from '../../map/types';
 import './style';
 
 export type PositionValue = {

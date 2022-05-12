@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import classNames from '@pansy/classnames';
-import { Map } from '../map';
+import { Map } from '../../map';
 import { ConfigContext } from '../config-provider';
 import BaseMapDeviceSelection from './map-device-selection';
 import type { MapDeviceSelectionProps } from './map-device-selection';

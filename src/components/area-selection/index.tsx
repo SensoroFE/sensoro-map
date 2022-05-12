@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
 import classNames from "@pansy/classnames";
-import { Map } from "../map";
+import { Map } from "../../map";
 import { ConfigContext } from "../config-provider";
 import AreaDeviceSelection from "./area-device-selection";
 import type { AreaDeviceSelectionProps } from "./area-device-selection";

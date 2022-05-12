@@ -3,7 +3,7 @@ import classNames from '@pansy/classnames';
 import { useMap } from '@pansy/react-amap';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import Icon from '@sensoro/sensoro-design/es/icon';
-import { LngLatArray } from '../../../map/types';
+import { LngLatArray } from '../../../../map/types';
 
 interface ToolsProps {
   prefixCLs?: string;

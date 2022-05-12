@@ -13,7 +13,7 @@ import {
   Polygon,
 } from "@pansy/react-amap";
 import type { PolygonProps } from "@pansy/react-amap/es/polygon";
-import { Theme, SearchAddress } from "../map";
+import { Theme, SearchAddress } from "../../map";
 import DeleteOutlined from "@sensoro-design/icons/DeleteOutlined";
 import classNames from "@pansy/classnames";
 import { Tools, Marker, ClusterMarker } from "./components";

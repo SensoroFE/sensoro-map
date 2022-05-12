@@ -3,7 +3,7 @@ import classNames from '@pansy/classnames';
 import { MAP_STYLES, imageBase64 } from '../../config';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { useMap } from '@pansy/react-amap';
-import { ConfigContext } from '../../../config-provider';
+import { ConfigContext } from '../../../components/config-provider';
 
 export interface ThemeProps {
   className?: string;

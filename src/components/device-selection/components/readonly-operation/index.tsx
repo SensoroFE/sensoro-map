@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import classNames from '@pansy/classnames';
 import { PlusOutlined } from '@ant-design/icons';
-import { Theme } from '../../../map';
+import { Theme } from '../../../../map';
 import { ConfigContext } from '../../../config-provider';
 
 interface ReadonlyOperationProps {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import classNames from '@pansy/classnames';
-import { Theme } from '../../../map';
+import { Theme } from '../../../../map';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { ConfigContext } from '../../../config-provider';
 

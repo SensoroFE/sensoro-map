@@ -4,7 +4,7 @@ import {
   Map as BaseMap
 } from '@pansy/react-amap';
 import { MapProps as BaseMapProps } from '@pansy/react-amap/es/map';
-import { Theme } from '../config-provider/types';
+import { Theme } from '../components/config-provider/types';
 import { MAP_CONFIG, MAP_STYLES } from './config';
 import './style';
 
