@@ -41,4 +41,4 @@ Map.defaultProps = {
   prefixCls: 'sen-map',
 }
 
-export { Theme, SearchAddress } from './components';
+export { Theme, SearchAddress, CityLocation } from './components';
