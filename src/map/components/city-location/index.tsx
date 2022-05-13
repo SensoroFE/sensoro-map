@@ -22,7 +22,7 @@ const CityLocation: FC<CityLocationProps> = (props) => {
               const { city, adcode, bounds } = res;
               //地图显示当前城市
               resetView && map.setBounds(bounds);
-              onLocation?.(city, adcode);
+              onLocation?.(city.replace(/(市|城区)$/, ''), adcode);
             }
           }
         });
