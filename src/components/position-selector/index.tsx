@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import classNames from "@pansy/classnames";
-import { Map, SearchAddress, Theme } from "../../map";
+import { Map, SearchAddress } from "../../map";
 import { Geocoder, Marker } from "@pansy/react-amap";
 import { MapProps } from "@pansy/react-amap/es/map";
 import { MarkerProps } from "@pansy/react-amap/es/marker";
@@ -142,9 +142,6 @@ const PositionSelector: React.FC<PositionProps> = ({
           <Tools position={value?.lnglat} />
         </>
       )}
-
-      <Theme className={`${prefixCls}-theme`} />
-
       <Marker
         position={markerPosition}
         render={() => PositionIcon}

@@ -1,27 +1,17 @@
 @import '../../../style/themes/index';
 
-@map-position-prefix-cls: ~'@{sen-prefix}-position';
+@map-position-selector-prefix-cls: ~'@{sen-prefix}-position-selector';
 
 @padding-base: 8px;
+@tool-max-width: 32px;
+@tool-min-width: 24px;
+@box-shadow-1: 0 0 2px rgba(60, 73, 97, 0.08), 0 4px 8px rgba(109, 119, 137, 0.16);
 
-.@{map-position-prefix-cls} {
+.@{map-position-selector-prefix-cls} {
   .sen-map-search-address {
     position: absolute;
     left: @padding-base;
     top: @padding-base;
-  }
-
-  &-theme {
-    position: absolute;
-    padding: 2px 4px;
-    top: @padding-base;
-    right: @padding-base;
-    font-size: 12px;
-    color: fade(#000, 65%);
-
-    .anticon {
-      color: fade(#000, 45%);
-    }
   }
 
   &-tools {
@@ -30,27 +20,113 @@
     right: @padding-base;
 
     .anticon {
-      color: fade(#000, 45%);
+      color: fade(#0A1B39, 60%);
+    }
+
+    /** ant 样式覆盖 */
+    .ant-popover-placement-left>.ant-popover-content>.ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner {
+      box-shadow: none;
+    }
+
+    .ant-popover-inner-content {
+      padding: 0;
     }
   }
 
-  &-theme,
-  &-tools-geo,
+  &-tools-theme {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: @box-shadow-1;
+    cursor: pointer;
+
+    &:hover {
+      background: fade(#ffff, 25%);
+    }
+
+    >div {
+      width: @tool-min-width;
+      height: @tool-min-width;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
+
+  &-tools-theme,
   &-tools-zooms {
     background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: @box-shadow-1;
   }
 
   &-tools-item {
-    width: 24px;
-    height: 24px;
+    width: @tool-max-width;
+    height: @tool-max-width;
     cursor: pointer;
     text-align: center;
-    line-height: 24px;
-    font-size: 14px;
+    line-height: @tool-max-width;
+    font-size: 16px;
+
+    &:hover {
+      background-color: rgba(10, 27, 57, 0.04);
+    }
+  }
+
+  &-tools-theme-content {
+    position: absolute;
+    right: 0px;
+    top: -16px;
+    display: flex;
+    border-radius: 2px;
+    box-shadow: @box-shadow-1;
+
+    >div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      cursor: pointer;
+      background: #fff;
+
+      &:last-child {
+        padding-left: 0;
+      }
+
+      &:first-child {
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+      }
+
+      >div {
+        width: 24px;
+        height: 24px;
+        border: solid 1px #fff;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      &:hover {
+        >div {
+          border: solid 1px #2B6DE5;
+        }
+      }
+    }
   }
 
   &-marker-icon.anticon {
     font-size: 32px;
   }
+
 }
