@@ -1,12 +1,10 @@
-import React from 'react';
-import classNames from '@pansy/classnames';
-import {
-  Map as BaseMap
-} from '@pansy/react-amap';
-import { MapProps as BaseMapProps } from '@pansy/react-amap/es/map';
-import { Theme } from '../components/config-provider/types';
-import { MAP_CONFIG, MAP_STYLES } from './config';
-import './style';
+import React from "react";
+import classNames from "@pansy/classnames";
+import { Map as BaseMap } from "@pansy/react-amap";
+import { MapProps as BaseMapProps } from "@pansy/react-amap/es/map";
+import { Theme } from "../components/config-provider/types";
+import { MAP_CONFIG, MAP_STYLES } from "./config";
+import "./style";
 
 export interface MapProps extends BaseMapProps {
   prefixCls?: string;
@@ -21,7 +19,7 @@ export const Map: React.FC<MapProps> = (props) => {
   return (
     <div
       className={classNames(className, {
-        [`${prefixCls}`]: true
+        [`${prefixCls}`]: true,
       })}
       style={style}
     >
@@ -38,7 +36,12 @@ export const Map: React.FC<MapProps> = (props) => {
 };
 
 Map.defaultProps = {
-  prefixCls: 'sen-map',
-}
+  prefixCls: "sen-map",
+};
 
-export { Theme, SearchAddress, CityLocation } from './components';
+export {
+  Theme,
+  SearchAddress,
+  CityLocation,
+  ChinaDivision,
+} from "./components";

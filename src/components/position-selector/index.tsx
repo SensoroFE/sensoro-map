@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import classNames from "@pansy/classnames";
-import { Map, SearchAddress } from "../../map";
+import { Map, CityLocation } from "../../map";
 import { Geocoder, Marker } from "@pansy/react-amap";
 import { MapProps } from "@pansy/react-amap/es/map";
 import { MarkerProps } from "@pansy/react-amap/es/marker";
-import Icon from "@sensoro/sensoro-design/es/icon";
 import { ConfigContext } from "../config-provider";
-import { Tools } from "./components";
+import { Tools, SearchAddress, CitySelector } from "./components";
 import { LngLatArray } from "../../map/types";
+import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import "./style";
 
 export type PositionValue = {
@@ -55,6 +55,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [center, setCenter] = useState<LngLatArray>();
   const geocoder = useRef<AMap.Geocoder>();
   const [markerPosition, setMarkerPosition] = useState<LngLatArray>();
+  const [city, setCity] = useState<string>("");
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
@@ -71,9 +72,7 @@ const PositionSelector: React.FC<PositionProps> = ({
 
   const prefixCls = getPrefixCls("position");
 
-  const PositionIcon = icon || (
-    <Icon className={`${prefixCls}-marker-icon`} type="icon-position" />
-  );
+  const PositionIcon = icon || <LocationPurely />;
 
   const handleMapClick = (lnglat: AMap.LngLat) => {
     if (isReadOnly) return;
@@ -81,8 +80,10 @@ const PositionSelector: React.FC<PositionProps> = ({
     if (geocoder.current) {
       geocoder.current.getAddress(lnglat, (status, result) => {
         let address = "";
+
         if (status === "complete" && result.regeocode) {
           address = result.regeocode.formattedAddress;
+          console.log("result", result);
         }
 
         const lnglatArr = lnglat.toArray();
@@ -140,8 +141,15 @@ const PositionSelector: React.FC<PositionProps> = ({
             }}
           />
           <Tools position={value?.lnglat} />
+          {city && <CitySelector city={city} />}
         </>
       )}
+      <CityLocation
+        onLocation={(c) => {
+          console.log("c", c);
+          setCity(c);
+        }}
+      />
       <Marker
         position={markerPosition}
         render={() => PositionIcon}

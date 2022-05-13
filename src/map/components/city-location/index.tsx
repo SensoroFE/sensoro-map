@@ -2,12 +2,12 @@ import React, { FC, useEffect, memo } from "react";
 import { useMap } from "@pansy/react-amap";
 
 interface CityLocationProps {
-  onChange?: (city: string, code: string) => void;
+  onLocation?: (city: string, code?: string) => void;
   resetView?: boolean; // 是否需要重置地图视野范围
 }
 
 const CityLocation: FC<CityLocationProps> = (props) => {
-  const { onChange, resetView = true } = props;
+  const { onLocation, resetView = true } = props;
   const { map } = useMap();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const CityLocation: FC<CityLocationProps> = (props) => {
               const { city, adcode, bounds } = res;
               //地图显示当前城市
               resetView && map.setBounds(bounds);
-              onChange?.(city, adcode);
+              onLocation?.(city, adcode);
             }
           }
         });

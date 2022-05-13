@@ -8,11 +8,85 @@
 @box-shadow-1: 0 0 2px rgba(60, 73, 97, 0.08), 0 4px 8px rgba(109, 119, 137, 0.16);
 
 .@{map-position-selector-prefix-cls} {
-  .sen-map-search-address {
+
+  &-search-address {
     position: absolute;
-    left: @padding-base;
-    top: @padding-base;
+    top: 12px;
+    left: 12px;
+    transform: translateZ(0);
+    box-shadow: @box-shadow-1;
+
+    .ant-input-affix-wrapper {
+      padding: 2px 8px;
+      height: 24px;
+      font-size: 12px;
+      border: none;
+      box-shadow: none;
+
+      input.ant-input {
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+
+    .ant-input-group>.ant-input:first-child {
+      line-height: 24px;
+      padding: 4px 12px;
+      border: none !important;
+
+      &::-webkit-input-placeholder {
+        color: rgba(10, 27, 57, 0.6);
+      }
+    }
+
+    .ant-input-search>.ant-input-group>.ant-input-group-addon:last-child .ant-input-search-button {
+      border: none !important;
+    }
+
+    .ant-input:focus,
+    .ant-input-focused {
+      box-shadow: none !important;
+    }
+
+    .ant-input-search-icon::before {
+      border-left: none;
+    }
+
+    .ant-input-search-icon {
+      padding: 0;
+    }
   }
+
+  &-city-selector {
+    position: absolute;
+    top: 12px;
+    left: 260px;
+  }
+
+  &-city-selector-content {
+    padding: 5px 12px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: @box-shadow-1;
+    font-size: 14px;
+    line-height: 22px;
+    color: #0A1B39;
+    cursor: pointer;
+
+    .anticon {
+      margin-left: 4px;
+      color: rgba(10, 27, 57, 0.8);
+    }
+
+    &:hover {
+      color: #2B6DE5;
+
+      .anticon {
+        color: #2B6DE5;
+      }
+    }
+  }
+
 
   &-tools {
     position: absolute;
