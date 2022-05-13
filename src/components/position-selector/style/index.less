@@ -7,6 +7,12 @@
 @tool-min-width: 24px;
 @box-shadow-1: 0 0 2px rgba(60, 73, 97, 0.08), 0 4px 8px rgba(109, 119, 137, 0.16);
 
+.common {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: @box-shadow-1;
+}
+
 .@{map-position-selector-prefix-cls} {
 
   &-search-address {
@@ -65,13 +71,11 @@
 
   &-city-selector-content {
     padding: 5px 12px;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: @box-shadow-1;
     font-size: 14px;
     line-height: 22px;
     color: #0A1B39;
     cursor: pointer;
+    .common();
 
     .anticon {
       margin-left: 4px;
@@ -84,6 +88,12 @@
       .anticon {
         color: #2B6DE5;
       }
+    }
+  }
+
+  &-city-selector-content-visible {
+    .anticon {
+      transform: rotate(180deg);
     }
   }
 
@@ -117,10 +127,8 @@
     justify-content: center;
     padding: 4px;
     margin-bottom: 8px;
-    background: #fff;
-    border-radius: 2px;
-    box-shadow: @box-shadow-1;
     cursor: pointer;
+    .common();
 
     &:hover {
       background: fade(#ffff, 25%);
@@ -136,8 +144,7 @@
 
   &-tools-theme,
   &-tools-zooms {
-    background-color: #fff;
-    box-shadow: @box-shadow-1;
+    .common();
   }
 
   &-tools-item {
