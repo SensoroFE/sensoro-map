@@ -8,10 +8,11 @@ import { ConfigContext } from "../config-provider";
 import { Tools, SearchAddress, CitySelector } from "./components";
 import { LngLatArray } from "../../map/types";
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
+import { debounce } from "lodash";
 import "./style";
 
 export type PositionValue = {
-  lnglat?: LngLatArray;
+  lnglat?: AMap.LngLat;
   location?: string;
 };
 
@@ -51,16 +52,18 @@ const PositionSelector: React.FC<PositionProps> = ({
   ...rest
 }) => {
   const lock = useRef<boolean>(false);
+  const mapIns = useRef<AMap.Map>();
   const { lnglat = [] } = value || {};
   const [center, setCenter] = useState<LngLatArray>();
   const geocoder = useRef<AMap.Geocoder>();
-  const [markerPosition, setMarkerPosition] = useState<LngLatArray>();
+  const [markerPosition, setMarkerPosition] = useState<AMap.LngLat>();
   const [city, setCity] = useState<string>("");
+  const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
     if (lnglat[0] && lnglat[1]) {
-      setMarkerPosition(lnglat as LngLatArray);
+      setMarkerPosition(lnglat as AMap.LngLat);
     }
 
     if (!disabledFitView) {
@@ -72,7 +75,9 @@ const PositionSelector: React.FC<PositionProps> = ({
 
   const prefixCls = getPrefixCls("position");
 
-  const PositionIcon = icon || <LocationPurely />;
+  const PositionIcon = (
+    <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
+  );
 
   const handleMapClick = (lnglat: AMap.LngLat) => {
     if (isReadOnly) return;
@@ -110,6 +115,13 @@ const PositionSelector: React.FC<PositionProps> = ({
     onChange?.(data);
   };
 
+  const handleMapMoveEnd = debounce(() => {
+    if (!searchVal) {
+      const center = mapIns.current?.getCenter();
+      setMarkerPosition(center);
+    }
+  }, 200);
+
   return (
     <Map
       className={classNames(className, {
@@ -121,6 +133,9 @@ const PositionSelector: React.FC<PositionProps> = ({
       {...rest}
       events={{
         ...(rest?.events ?? {}),
+        created: (ins) => {
+          mapIns.current = ins;
+        },
         click: (e) => {
           const lnglat = e.lnglat;
 
@@ -128,11 +143,12 @@ const PositionSelector: React.FC<PositionProps> = ({
             handleMapClick(lnglat);
           }
         },
+        moveend: handleMapMoveEnd,
       }}
     >
       {!isReadOnly && (
         <>
-          <SearchAddress />
+          <SearchAddress city={city} />
           <Geocoder
             events={{
               created: (instance) => {
@@ -141,12 +157,11 @@ const PositionSelector: React.FC<PositionProps> = ({
             }}
           />
           <Tools position={value?.lnglat} />
-          {city && <CitySelector city={city} />}
+          {city && <CitySelector city={city} onChange={setCity} />}
         </>
       )}
       <CityLocation
         onLocation={(c) => {
-          console.log("c", c);
           setCity(c);
         }}
       />

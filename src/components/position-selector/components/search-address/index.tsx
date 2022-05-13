@@ -20,6 +20,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
   useEffect(() => {
     autoComplete?.current?.setCity(city || "全国");
+    autoComplete?.current?.setCityLimit(!!city);
   }, [city]);
 
   const handleSelect = (value: string, options: any) => {
@@ -71,14 +72,12 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
           } as any
         }
       />
-      <AntAutoComplete
-        onSelect={handleSelect}
+      <Input.Search
         onSearch={handleSearch}
         style={{ width: size === "small" ? 200 : 240 }}
-        options={options}
-      >
-        <Input.Search size={size} placeholder="请输入地址信息" />
-      </AntAutoComplete>
+        size={size}
+        placeholder="请输入地址信息"
+      />
     </span>
   );
 };

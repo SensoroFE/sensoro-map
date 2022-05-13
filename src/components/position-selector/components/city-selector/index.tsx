@@ -64,6 +64,7 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
 
   const handleClickCity = (c: string, position: any) => {
     setCurCity(c);
+    onChange?.(c);
     setVisible(false);
     position && map?.setZoomAndCenter(15, position);
   };
