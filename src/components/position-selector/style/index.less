@@ -24,7 +24,7 @@
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;
-      height: 24px;
+      height: 32px;
       font-size: 12px;
       border: none;
       box-shadow: none;
@@ -60,6 +60,54 @@
 
     .ant-input-search-icon {
       padding: 0;
+    }
+  }
+
+  &-search-address-empty {
+    margin: 8px 0;
+    text-align: center;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(10, 27, 57, 0.35);
+  }
+
+  &-search-address-dropdown {
+    .common();
+    position: absolute;
+    width: 240px;
+    top: 36px;
+    left: 0;
+    padding: 8px 0;
+    max-height: 480px;
+    overflow-y: overlay;
+    z-index: 10;
+  }
+
+  &-search-address-dropdown-item {
+    cursor: pointer;
+    padding: 8px 12px;
+
+    >p {
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    >p:first-child {
+      font-size: 14px;
+      line-height: 22px;
+      color: rgba(10, 27, 57, 0.8);
+    }
+
+    >p:last-child {
+      font-size: 12px;
+      line-height: 20px;
+      color: rgba(10, 27, 57, 0.35);
+    }
+
+    &:hover {
+      background-color: rgba(10, 27, 57, 0.04)
     }
   }
 
