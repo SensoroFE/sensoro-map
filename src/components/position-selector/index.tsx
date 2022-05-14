@@ -7,9 +7,9 @@ import { MarkerProps } from "@pansy/react-amap/es/marker";
 import { ConfigContext } from "../config-provider";
 import { Tools, SearchAddress, CitySelector } from "./components";
 import { LngLatArray } from "../../map/types";
+// @ts-ignore
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
-import { debounce } from "lodash";
 import "./style";
 
 export type PositionValue = {
@@ -105,7 +105,7 @@ const PositionSelector: React.FC<PositionProps> = ({
           address = result.regeocode.formattedAddress;
         }
         setClickInfo({
-          lnglat: lnglat.toArray(),
+          lnglat: lnglat.toArray() as any,
           location: address,
         });
       });
