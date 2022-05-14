@@ -16,25 +16,21 @@ group:
 
 <code src="./demo/demo-01.tsx" />
 
-### 在表单中使用
+### 小尺寸适配
 
 <code src="./demo/demo-02.tsx" />
 
-### 只读模式下，仅显示，不支持修改
+### 在表单中使用
 
 <code src="./demo/demo-03.tsx" />
 
-### 自定义Icon
+### 只读模式下，仅显示，不支持修改
 
 <code src="./demo/demo-04.tsx" />
 
-### 自定义Marker
+### 自定义Icon
 
 <code src="./demo/demo-05.tsx" />
-
-### 自定义Center
-
-<code src="./demo/demo-06.tsx" />
 
 ## API
 
@@ -46,4 +42,5 @@ group:
 | icon      | 标记点的Icon | `ReactNode` | --     | `1.36.4`   |
 | offset      | 标记点的偏移量  | `[number, number]` | `[-16, -16]` | `1.36.4`   |
 | onChange   | 位置改变的回调         | (value) => void                                 | --     | --   |
-| isReadOnly | 只读模式               | boolean                                         | false  | --   |
+| isReadOnly | 只读模式               | boolean                                         | false  | 
+| small      | 小尺寸模式               | boolean                                         | false  | --   |

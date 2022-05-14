@@ -54,7 +54,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   marker,
   disabledFitView = false,
   citySelector = true,
-  small=false,
+  small = false,
   children,
   ...rest
 }) => {
@@ -64,8 +64,8 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [center, setCenter] = useState<LngLatArray>();
   const geocoder = useRef<AMap.Geocoder>();
   const [markerPosition, setMarkerPosition] = useState<AMap.LngLat>();
-  const [clickPosition, setClickPosition] = useState<AMap.LngLat>();
   const [city, setCity] = useState<string>("");
+  const [clickInfo, setClickInfo] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
   const { getPrefixCls } = useContext(ConfigContext);
 
@@ -82,8 +82,11 @@ const PositionSelector: React.FC<PositionProps> = ({
   }, [value]);
 
   useEffect(() => {
-    if (!tip && clickPosition) setMarkerPosition(clickPosition);
-  }, [clickPosition, tip]);
+    if (!tip && clickInfo?.lnglat) {
+      setMarkerPosition(clickInfo?.lnglat);
+      onChange?.(clickInfo);
+    }
+  }, [clickInfo, tip]);
 
   const prefixCls = getPrefixCls("position");
 
@@ -101,20 +104,12 @@ const PositionSelector: React.FC<PositionProps> = ({
         if (status === "complete" && result.regeocode) {
           address = result.regeocode.formattedAddress;
         }
-
-        const lnglatArr = lnglat.toArray();
-        setClickPosition(lnglatArr);
-        handleChange({
+        setClickInfo({
           lnglat: lnglat.toArray(),
           location: address,
         });
       });
     }
-  };
-
-  const handleChange = (data: PositionValue) => {
-    lock.current = true;
-    !tip && onChange?.(data);
   };
 
   const SearchAdressDom = useMemo(() => {
@@ -163,19 +158,19 @@ const PositionSelector: React.FC<PositionProps> = ({
                 },
               }}
             />
-            <Tools position={value?.lnglat} small={small} />
             {citySelector && city && (
               <CitySelector small={small} city={city} onChange={setCity} />
             )}
+            {citySelector && (
+              <CityLocation
+                onLocation={(c) => {
+                  setCity(c);
+                }}
+              />
+            )}
           </>
         )}
-        {citySelector && (
-          <CityLocation
-            onLocation={(c) => {
-              setCity(c);
-            }}
-          />
-        )}
+        <Tools small={small} />
       </PSContextProvider>
       <Marker
         position={markerPosition}
