@@ -5,12 +5,13 @@ specifiers:
   '@commitlint/cli': 14.1.0
   '@pansy/classnames': ^1.0.1
   '@pansy/react-amap': 2.11.0
-  '@sensoro-design/icons': ^1.3.1
+  '@sensoro-design/icons': ^1.3.2
   '@sensoro/sensoro-design': ^2.0.0
   '@types/react': ^17
   '@types/react-dom': ^17
   '@walrus/cli': 1.3.4
   '@walrus/plugin-release': 1.14.0
+  ahooks: ^2.10.11
   antd: 4.16.13
   commitlint-config-gitmoji: 2.2.5
   dumi: 1.1.40
@@ -24,7 +25,8 @@ specifiers:
 dependencies:
   '@ant-design/icons': 4.7.0_react-dom@17.0.2+react@17.0.2
   '@pansy/classnames': 1.0.1
-  '@sensoro-design/icons': 1.3.1_react-dom@17.0.2+react@17.0.2
+  '@sensoro-design/icons': 1.3.2_react-dom@17.0.2+react@17.0.2
+  ahooks: 2.10.14_react@17.0.2
   lodash: 4.17.21
 
 devDependencies:
@@ -45,6 +47,16 @@ devDependencies:
   typescript: 4.6.3
 
 packages:
+
+  /@ahooksjs/use-request/2.8.15_react@17.0.2:
+    resolution: {integrity: sha512-xhVaM4fyIiAMdVFuuU5i3CFUdFa/IblF+fvITVMFaUEO3w/V5tVCAF6WIA3T03n1/RPuzRkA7Ao1PFtSGtGelw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    dependencies:
+      lodash.debounce: 4.0.8
+      lodash.throttle: 4.1.1
+      react: 17.0.2
+    dev: false
 
   /@ampproject/remapping/2.1.2:
     resolution: {integrity: sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg==}
@@ -5143,12 +5155,12 @@ packages:
       rollup: 2.33.3
     dev: true
 
-  /@sensoro-design/icons-svg/1.3.1:
-    resolution: {integrity: sha512-ODNJu2w7vcCSRqcd2CpVcB4GLGeHADENM/nC6pKaioNnJub2MZaP+MFC/dZnLuk1owtay8AHETMJP2rMAneoYw==}
+  /@sensoro-design/icons-svg/1.3.2:
+    resolution: {integrity: sha512-23JJF9L3mQajqOmYtWjsyfN+H5kOKEnNADvbeN9vvolnH/nfl84/9f02JIcHLOPuss4dMBdcPPm7n3mhDfSZVg==}
     dev: false
 
-  /@sensoro-design/icons/1.3.1_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-0QsDlx28QQ4n/rWqcFKSqIztL4vBUg5872SgW/h+STqRE1SHeI7zAQnX598FSL+oVm1V4o31Q5UGA1pgRpDmaw==}
+  /@sensoro-design/icons/1.3.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-8EZ+ia67L6F+QpTyKe9IM1rNQNh6IhfH0Fwhl3xHEisoY5jV0KWpcBja0LXazta9wZsTSTkEsB8Nv3UcCkzOBA==}
     peerDependencies:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
@@ -5156,7 +5168,7 @@ packages:
       '@ant-design/colors': 6.0.0
       '@babel/runtime': 7.17.9
       '@pansy/classnames': 1.0.1
-      '@sensoro-design/icons-svg': 1.3.1
+      '@sensoro-design/icons-svg': 1.3.2
       rc-util: 5.20.0_react-dom@17.0.2+react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -5481,6 +5493,10 @@ packages:
       '@types/through': 0.0.30
       rxjs: 6.6.7
     dev: true
+
+  /@types/js-cookie/2.2.7:
+    resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
+    dev: false
 
   /@types/json-buffer/3.0.0:
     resolution: {integrity: sha512-3YP80IxxFJB4b5tYC2SUPwkg0XQLiu0nWvhRgEatgjf+29IcWO9X1k8xRv5DGssJ/lCrjYTjQPcobJr2yWIVuQ==}
@@ -6331,6 +6347,25 @@ packages:
       clean-stack: 2.2.0
       indent-string: 4.0.0
     dev: true
+
+  /ahooks/2.10.14_react@17.0.2:
+    resolution: {integrity: sha512-axWa7VoAgu7bxA56dDl0CXW4rvaQmDBiov/d3tAy0x1YNYywYMKokL8TdLgJ5zO/oXGiWmG7BxlGOQGkqE/zkQ==}
+    engines: {node: '>=8.0.0'}
+    peerDependencies:
+      react: ^16.8.6 || ^17.0
+    dependencies:
+      '@ahooksjs/use-request': 2.8.15_react@17.0.2
+      '@types/js-cookie': 2.2.7
+      dayjs: 1.11.0
+      intersection-observer: 0.7.0
+      js-cookie: 2.2.1
+      lodash.debounce: 4.0.8
+      lodash.isequal: 4.5.0
+      lodash.throttle: 4.1.1
+      react: 17.0.2
+      resize-observer-polyfill: 1.5.1
+      screenfull: 5.2.0
+    dev: false
 
   /ajv-errors/1.0.1_ajv@6.12.6:
     resolution: {integrity: sha512-DCRfO/4nQ+89p/RK43i8Ezd41EqdGIU4ld7nGF8OQ14oc/we5rEntLCUa7+jrn3nn83BosfwZA0wb4pon2o8iQ==}
@@ -8021,7 +8056,6 @@ packages:
 
   /dayjs/1.11.0:
     resolution: {integrity: sha512-JLC809s6Y948/FuCZPm5IX8rRhQwOiyMb2TfVVQEixG7P8Lm/gt5S7yoQZmC8x1UehI9Pb7sksEt4xx14m+7Ug==}
-    dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -9906,6 +9940,10 @@ packages:
     resolution: {integrity: sha512-2Vkz8z46Dv401zTWudDGwO7KiGHNDkMv417T5ItcNYfmvHR/1qCTVBO9vwH8zZmQ0WkA/1ARwpysR9bsnop4NQ==}
     dev: true
 
+  /intersection-observer/0.7.0:
+    resolution: {integrity: sha512-Id0Fij0HsB/vKWGeBe9PxeY45ttRiBmhFyyt/geBdDHBYNctMRTE3dC1U3ujzz3lap+hVXlEcVaB56kZP/eEUg==}
+    dev: false
+
   /invariant/2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
     dependencies:
@@ -10368,6 +10406,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /js-cookie/2.2.1:
+    resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    dev: false
+
   /js-sdsl/2.1.4:
     resolution: {integrity: sha512-/Ew+CJWHNddr7sjwgxaVeIORIH4AMVC9dy0hPf540ZGMVgS9d3ajwuVdyhDt6/QUvT8ATjR3yuYBKsS79F+H4A==}
     dev: true
@@ -10782,7 +10824,6 @@ packages:
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
-    dev: true
 
   /lodash.defaults/4.2.0:
     resolution: {integrity: sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw=}
@@ -10795,6 +10836,10 @@ packages:
   /lodash.get/4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
     dev: true
+
+  /lodash.isequal/4.5.0:
+    resolution: {integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=}
+    dev: false
 
   /lodash.ismatch/4.4.0:
     resolution: {integrity: sha1-dWy1FQyjum8RCFp4hJZF8Yj4Xzc=}
@@ -10831,7 +10876,6 @@ packages:
 
   /lodash.throttle/4.1.1:
     resolution: {integrity: sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=}
-    dev: true
 
   /lodash.uniq/4.5.0:
     resolution: {integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=}
@@ -14444,7 +14488,6 @@ packages:
 
   /resize-observer-polyfill/1.5.1:
     resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
-    dev: true
 
   /resolve-alpn/1.2.1:
     resolution: {integrity: sha512-0a1F4l73/ZFZOakJnQ3FvkJ2+gSTQWz/r2KE5OdDY0TxPm5h4GkqkWWfM47T7HsbnOtcJVEF4epCVy6u7Q3K+g==}
@@ -14733,7 +14776,6 @@ packages:
   /screenfull/5.2.0:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /scroll-into-view-if-needed/2.2.29:
     resolution: {integrity: sha512-hxpAR6AN+Gh53AdAimHM6C8oTN1ppwVZITihix+WqalywBeFcQ6LdQP5ABNl26nX8GTEL7VT+b8lKpdqq65wXg==}
