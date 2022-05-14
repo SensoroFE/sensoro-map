@@ -3,6 +3,7 @@ import { useMap } from "@pansy/react-amap";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { LngLatArray } from "../../../../map/types";
 import { Tooltip, Popover } from "antd";
+import classNames from "@pansy/classnames";
 //@ts-ignore;
 import generalImg from "../../../../assets/theme/general.png";
 //@ts-ignore;
@@ -11,6 +12,7 @@ import sateliteImg from "../../../../assets/theme/satelite.png";
 interface ToolsProps {
   prefixCLs?: string;
   position?: LngLatArray;
+  small: boolean;
 }
 
 const getCurrentImg = (type: string): string => {
@@ -24,7 +26,7 @@ const getCurrentImg = (type: string): string => {
   }
 };
 
-export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
+export const Tools: FC<ToolsProps> = ({ prefixCLs, small = false }) => {
   const { map } = useMap();
   const sateLite = useRef<any>();
   const themeContent = useRef();
@@ -70,7 +72,11 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
   };
 
   const themeChange = (
-    <div className={`${prefixCLs}-theme-content`}>
+    <div
+      className={classNames(`${prefixCLs}-theme-content`, {
+        [`${prefixCLs}-theme-content-small`]: !!small,
+      })}
+    >
       <Tooltip title="标准" placement="top">
         <div
           onClick={() => {
@@ -109,7 +115,9 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
           trigger={["hover"]}
           getPopupContainer={() => themeContent?.current as any}
         >
-          <div className={`${prefixCLs}-theme`}>
+          <div className={classNames(`${prefixCLs}-theme`, {
+            [`${prefixCLs}-theme-small`]: !!small
+          })}>
             <div
               style={{
                 backgroundImage: `url(${getCurrentImg(mapTheme)})`,
@@ -118,14 +126,28 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, position }) => {
           </div>
         </Popover>
       </Tooltip>
-      <div className={`${prefixCLs}-zooms`}>
+      <div
+        className={classNames(`${prefixCLs}-zooms`, {
+          [`${prefixCLs}-zooms-small`]: !!small,
+        })}
+      >
         <Tooltip title="放大" placement="left">
-          <div className={`${prefixCLs}-item`} onClick={handlePlusClick}>
+          <div
+            className={classNames(`${prefixCLs}-item`, {
+              [`${prefixCLs}-item-small`]: !!small,
+            })}
+            onClick={handlePlusClick}
+          >
             <PlusOutlined />
           </div>
         </Tooltip>
         <Tooltip title="缩小" placement="left">
-          <div className={`${prefixCLs}-item`} onClick={handleMinusClick}>
+          <div
+            className={classNames(`${prefixCLs}-item`, {
+              [`${prefixCLs}-item-small`]: !!small,
+            })}
+            onClick={handleMinusClick}
+          >
             <MinusOutlined />
           </div>
         </Tooltip>

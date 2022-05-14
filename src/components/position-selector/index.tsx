@@ -37,6 +37,10 @@ export interface PositionProps extends MapProps {
   marker?: MarkerProps;
   /** 设备位置改变回调 */
   onChange?: (value: PositionValue) => void;
+  /** 是否展示城市选择器 */
+  citySelector?: boolean;
+  /** 小尺寸适配  */
+  small?: boolean;
 }
 
 const PositionSelector: React.FC<PositionProps> = ({
@@ -49,6 +53,8 @@ const PositionSelector: React.FC<PositionProps> = ({
   icon,
   marker,
   disabledFitView = false,
+  citySelector = true,
+  small=false,
   children,
   ...rest
 }) => {
@@ -115,13 +121,14 @@ const PositionSelector: React.FC<PositionProps> = ({
     return (
       <SearchAddress
         city={city}
+        small={small}
         onChange={(value) => {
           value.lnglat && setMarkerPosition(value.lnglat);
           onChange?.(value);
         }}
       />
     );
-  }, [city]);
+  }, [city, small]);
 
   return (
     <Map
@@ -156,15 +163,19 @@ const PositionSelector: React.FC<PositionProps> = ({
                 },
               }}
             />
-            <Tools position={value?.lnglat} />
-            {city && <CitySelector city={city} onChange={setCity} />}
+            <Tools position={value?.lnglat} small={small} />
+            {citySelector && city && (
+              <CitySelector small={small} city={city} onChange={setCity} />
+            )}
           </>
         )}
-        <CityLocation
-          onLocation={(c) => {
-            setCity(c);
-          }}
-        />
+        {citySelector && (
+          <CityLocation
+            onLocation={(c) => {
+              setCity(c);
+            }}
+          />
+        )}
       </PSContextProvider>
       <Marker
         position={markerPosition}

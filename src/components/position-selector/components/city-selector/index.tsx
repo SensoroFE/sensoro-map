@@ -18,11 +18,12 @@ export interface CitySelectorProps {
   prefixCls?: string;
   onChange?: (city: string) => void;
   city?: string; // 设置限定城市
+  small?: boolean;
 }
 
 const CitySelector: FC<CitySelectorProps> = (props) => {
   const { map } = useMap();
-  const { prefixCls, city, onChange } = props;
+  const { prefixCls, city, small = false, onChange } = props;
   // 点击热区之外内容区, 收起城市选择器
   const hotRef = useRef(null);
   const [visible, setVisible] = useState<boolean>(false);
@@ -30,7 +31,7 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
   const [source, setSource] = useState<DivisionData[]>([]);
   const [curCity, setCurCity] = useState<string>("");
 
-  const { tip } = usePSContext()
+  const { tip } = usePSContext();
 
   useEffect(() => {
     city && setCurCity(city);
@@ -73,7 +74,12 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
   };
 
   return (
-    <div className={prefixCls} ref={hotRef}>
+    <div
+      className={classNames(prefixCls, {
+        [`${prefixCls}-small`]: !!small,
+      })}
+      ref={hotRef}
+    >
       <ChinaDivision
         onDataLoad={(division) => {
           setSource(division);
@@ -81,8 +87,9 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
       />
       <div
         className={classNames(`${prefixCls}-content`, {
+          [`${prefixCls}-content-small`]: !!small,
           [`${prefixCls}-content-visible`]: visible,
-          [`${prefixCls}-content-disabled`]: !!tip
+          [`${prefixCls}-content-disabled`]: !!tip,
         })}
         onClick={() => {
           !tip && setVisible(!visible);

@@ -18,14 +18,14 @@ export interface SearchAddressProps extends AutoCompleteProps {
   /** 设备位置改变回调 */
   onChange?: (value: PositionValue) => void;
   city?: string; // 设置限定城市
-  size?: "middle" | "small";
+  small?: boolean; //
 }
 
 const SearchAddress: FC<SearchAddressProps> = (props) => {
   const autoComplete = useRef<AMap.AutoComplete>();
   const clickRef = useRef();
   const { map } = useMap();
-  const { prefixCls, onChange, size, city } = props;
+  const { prefixCls, onChange, small = false, city } = props;
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const [options, setOptions] = useState([]);
   const [visible, setVisible] = useState<boolean>(false);
@@ -127,7 +127,12 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const empty = <p className={`${prefixCls}-empty`}>无搜索结果</p>;
 
   return (
-    <div className={prefixCls} ref={clickRef}>
+    <div
+      className={classNames(prefixCls, {
+        [`${prefixCls}-small`]: !!small,
+      })}
+      ref={clickRef}
+    >
       <AutoComplete
         events={
           {
@@ -150,13 +155,17 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         }}
         disabled={!!tip}
         value={searchVal}
-        style={{ width: size === "small" ? 200 : 240 }}
-        size={size}
+        style={{ width: small ? 200 : 240 }}
+        size={small ? "small" : "middle"}
         allowClear
         placeholder="请输入地址信息"
       />
       {visible && !tip && (
-        <div className={`${prefixCls}-dropdown`}>
+        <div
+          className={classNames(`${prefixCls}-dropdown`, {
+            [`${prefixCls}-dropdown-small`]: !!small,
+          })}
+        >
           {options.length ? <>{options.map((i) => renderItem(i))}</> : empty}
         </div>
       )}
@@ -200,7 +209,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
 SearchAddress.defaultProps = {
   prefixCls: "sen-map-position-selector-search-address",
-  size: "middle",
 };
 
 export default SearchAddress;
