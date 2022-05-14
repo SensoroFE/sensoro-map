@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@ahooksjs/use-request@^2.8.14":
+  version "2.8.15"
+  resolved "https://registry.yarnpkg.com/@ahooksjs/use-request/-/use-request-2.8.15.tgz#daa32a8395ba75e8deb9f4fde4e221a4a8f525db"
+  integrity sha512-xhVaM4fyIiAMdVFuuU5i3CFUdFa/IblF+fvITVMFaUEO3w/V5tVCAF6WIA3T03n1/RPuzRkA7Ao1PFtSGtGelw==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    lodash.throttle "^4.1.1"
+
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.npmmirror.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -3237,20 +3245,20 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sensoro-design/icons-svg@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.npmmirror.com/@sensoro-design/icons-svg/-/icons-svg-1.3.1.tgz#0a5f46a38071934c767ac71e525c780a1ea8da37"
-  integrity sha512-ODNJu2w7vcCSRqcd2CpVcB4GLGeHADENM/nC6pKaioNnJub2MZaP+MFC/dZnLuk1owtay8AHETMJP2rMAneoYw==
+"@sensoro-design/icons-svg@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@sensoro-design/icons-svg/-/icons-svg-1.3.2.tgz#fc78c9599379cdec3d8c0ad976700125ba6eb605"
+  integrity sha512-23JJF9L3mQajqOmYtWjsyfN+H5kOKEnNADvbeN9vvolnH/nfl84/9f02JIcHLOPuss4dMBdcPPm7n3mhDfSZVg==
 
-"@sensoro-design/icons@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.npmmirror.com/@sensoro-design/icons/-/icons-1.3.1.tgz#2a746d6990d59f5276a7c29bf1e807d587e0d53a"
-  integrity sha512-0QsDlx28QQ4n/rWqcFKSqIztL4vBUg5872SgW/h+STqRE1SHeI7zAQnX598FSL+oVm1V4o31Q5UGA1pgRpDmaw==
+"@sensoro-design/icons@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@sensoro-design/icons/-/icons-1.3.2.tgz#fc9cf257f5a7dd027bed7c743b3c2adbb8005cb7"
+  integrity sha512-8EZ+ia67L6F+QpTyKe9IM1rNQNh6IhfH0Fwhl3xHEisoY5jV0KWpcBja0LXazta9wZsTSTkEsB8Nv3UcCkzOBA==
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@babel/runtime" "^7.11.2"
     "@pansy/classnames" "^1.0.1"
-    "@sensoro-design/icons-svg" "1.3.1"
+    "@sensoro-design/icons-svg" "1.3.2"
     rc-util "^5.19.3"
 
 "@sensoro/sensoro-design@^2.0.0":
@@ -3577,9 +3585,9 @@
     "@types/through" "*"
     rxjs "^6.4.0"
 
-"@types/js-cookie@^2.x.x":
+"@types/js-cookie@^2.2.6", "@types/js-cookie@^2.x.x":
   version "2.2.7"
-  resolved "https://registry.npmmirror.com/@types/js-cookie/-/js-cookie-2.2.7.tgz#226a9e31680835a6188e887f3988e60c04d3f6a3"
+  resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-2.2.7.tgz#226a9e31680835a6188e887f3988e60c04d3f6a3"
   integrity sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==
 
 "@types/json-buffer@~3.0.0":
@@ -4306,6 +4314,22 @@ aggregate-error@^3.0.0:
   dependencies:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
+
+ahooks@^2.10.11:
+  version "2.10.14"
+  resolved "https://registry.yarnpkg.com/ahooks/-/ahooks-2.10.14.tgz#e134a5846b610079775ba881192c9aacca9102a8"
+  integrity sha512-axWa7VoAgu7bxA56dDl0CXW4rvaQmDBiov/d3tAy0x1YNYywYMKokL8TdLgJ5zO/oXGiWmG7BxlGOQGkqE/zkQ==
+  dependencies:
+    "@ahooksjs/use-request" "^2.8.14"
+    "@types/js-cookie" "^2.2.6"
+    dayjs "^1.9.1"
+    intersection-observer "^0.7.0"
+    js-cookie "^2.2.1"
+    lodash.debounce "^4.0.8"
+    lodash.isequal "^4.5.0"
+    lodash.throttle "^4.1.1"
+    resize-observer-polyfill "^1.5.1"
+    screenfull "^5.0.0"
 
 ajv-errors@^1.0.0:
   version "1.0.1"
@@ -6114,6 +6138,11 @@ dayjs@1.x:
   version "1.11.1"
   resolved "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.1.tgz#90b33a3dda3417258d48ad2771b415def6545eb0"
   integrity sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==
+
+dayjs@^1.9.1:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.2.tgz#fa0f5223ef0d6724b3d8327134890cfe3d72fbe5"
+  integrity sha512-F4LXf1OeU9hrSYRPTTj/6FbO4HTjPKXvEIC1P2kcnFurViINCVk3ZV0xAS3XVx9MkMsXbbqlK6hjseaYbgKEHw==
 
 debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.3:
   version "4.3.4"
@@ -8068,6 +8097,11 @@ intersection-observer@^0.12.0:
   resolved "https://registry.npmmirror.com/intersection-observer/-/intersection-observer-0.12.0.tgz#6c84628f67ce8698e5f9ccf857d97718745837aa"
   integrity sha512-2Vkz8z46Dv401zTWudDGwO7KiGHNDkMv417T5ItcNYfmvHR/1qCTVBO9vwH8zZmQ0WkA/1ARwpysR9bsnop4NQ==
 
+intersection-observer@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/intersection-observer/-/intersection-observer-0.7.0.tgz#ee16bee978db53516ead2f0a8154b09b400bbdc9"
+  integrity sha512-Id0Fij0HsB/vKWGeBe9PxeY45ttRiBmhFyyt/geBdDHBYNctMRTE3dC1U3ujzz3lap+hVXlEcVaB56kZP/eEUg==
+
 invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npmmirror.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
@@ -8562,9 +8596,9 @@ joycon@3.0.1:
   resolved "https://registry.npmmirror.com/joycon/-/joycon-3.0.1.tgz#9074c9b08ccf37a6726ff74a18485f85efcaddaf"
   integrity sha512-SJcJNBg32dGgxhPtM0wQqxqV0ax9k/9TaUskGDSJkSFSQOEWWvQ3zzWdGQRIUry2j1zA5+ReH13t0Mf3StuVZA==
 
-js-cookie@^2.x.x:
+js-cookie@^2.2.1, js-cookie@^2.x.x:
   version "2.2.1"
-  resolved "https://registry.npmmirror.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
   integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
 js-sdsl@^2.1.2:
@@ -9015,6 +9049,11 @@ lodash.get@^4:
   version "4.4.2"
   resolved "https://registry.npmmirror.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.ismatch@^4.4.0:
   version "4.4.0"
@@ -12803,9 +12842,9 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-screenfull@^5.0.2:
+screenfull@^5.0.0, screenfull@^5.0.2:
   version "5.2.0"
-  resolved "https://registry.npmmirror.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
+  resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
   integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
 
 scroll-into-view-if-needed@^2.2.25:

@@ -1,13 +1,17 @@
 import { Map } from "./map";
-import { Position } from "./position";
-import { DeviceSelection } from "./device-selection";
-import { AreaSelection } from "./area-selection";
+import {
+  Position,
+  DeviceSelection,
+  AreaSelection,
+  PositionSelector,
+} from "./components";
 
-export { Map, Position, DeviceSelection, AreaSelection };
+export { Map, Position, DeviceSelection, AreaSelection, PositionSelector };
 
 export default {
   Map,
   Position,
   DeviceSelection,
   AreaSelection,
+  PositionSelector,
 };

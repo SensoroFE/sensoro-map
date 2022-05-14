@@ -23,7 +23,7 @@ export default {
     },
   ],
   alias: {
-    "@sensoro/sensoro-map/es": join(__dirname, "src"),
+    "@sensoro/sensoro-map/es": join(__dirname, "src/components"),
     "@sensoro/sensoro-map/lib": join(__dirname, "src"),
     "@sensoro/sensoro-map": join(__dirname, "src"),
   },
