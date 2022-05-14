@@ -1,14 +1,22 @@
 import React, { FC, useState, useEffect, useRef } from "react";
-import { uniqueId } from "lodash";
-import { Input, AutoComplete as AntAutoComplete } from "antd";
+import { Input, Button } from "antd";
 import { AutoCompleteProps } from "@pansy/react-amap/es/auto-complete/types";
-import { LngLatObj } from "../../../../map/types";
+import { PositionValue } from "../../";
 import { useMap, AutoComplete } from "@pansy/react-amap";
-import { useClickAway } from "ahooks";
+import { usePSContext } from "../context";
+import { debounce } from "lodash";
+import classNames from "@pansy/classnames";
+
+// 中英文、数字、空格、英文·、英文.、英文_，不能以空格开头
+// eslint-disable-next-line
+const nameRegexp = new RegExp(
+  "^[a-zA-Z\\u4E00-\\u9FA5\\d\\.\\_\\·][a-zA-Z()+=\\u4E00-\\u9FA5\\d\\s\\.\\_\\·]*$"
+);
 
 export interface SearchAddressProps extends AutoCompleteProps {
   prefixCls?: string;
-  onChange?: (position: LngLatObj) => void;
+  /** 设备位置改变回调 */
+  onChange?: (value: PositionValue) => void;
   city?: string; // 设置限定城市
   size?: "middle" | "small";
 }
@@ -21,29 +29,70 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const [options, setOptions] = useState([]);
   const [visible, setVisible] = useState<boolean>(false);
+  const [location, setLocation] = useState<undefined | string>(undefined);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+
+  const { tip, setTip } = usePSContext();
+
+  const handleMapEvents = () => {
+    !tip && setVisible(false);
+  };
 
   useEffect(() => {
     autoComplete?.current?.setCity(city || "全国");
     autoComplete?.current?.setCityLimit(!!city);
+    setOptions([]);
+    setVisible(false);
   }, [city]);
 
-  useClickAway(() => {
-    setVisible(false);
-  }, clickRef);
-
   useEffect(() => {
-    if(!searchVal) setVisible(false);
+    if (!searchVal) setVisible(false);
   }, [searchVal]);
 
-  const handleSelect = (value: string, options: any) => {
-    const location = options.location;
-    if (!location) return;
-    map?.setCenter([location.lng, location.lat]);
-    map?.setZoom(15);
-    onChange?.({
-      longitude: location.lng,
-      latitude: location.lat,
-    });
+  useEffect(
+    debounce(() => {
+      setErrorMsg("");
+      if (tip?.location) {
+        if (!location) {
+          setErrorMsg("名称不能为空");
+          return;
+        } else if (location.length > 50) {
+          setErrorMsg("名称不能超过50个字");
+          return;
+        } else if (!nameRegexp.test(location)) {
+          setErrorMsg("名称包含异常字符");
+          return;
+        }
+        const point = [tip.location.lng, tip.location.lat];
+        onChange?.({
+          lnglat: point as any,
+          location,
+        });
+      } else {
+        setErrorMsg("");
+      }
+    }, 200),
+    [location, tip]
+  );
+
+  useEffect(() => {
+    setErrorMsg("");
+    if (tip) {
+      tip.name && setLocation(tip.name);
+    }
+    map.on("click", handleMapEvents);
+    return () => {
+      map.off("click", handleMapEvents);
+    };
+  }, [tip]);
+
+  const handleSelect = (item: AMap.AutoComplete.Tip) => {
+    setErrorMsg("");
+    const loca = item.location;
+    if (!loca) return;
+    setTip(item);
+    const position = [loca.lng, loca.lat];
+    map?.setZoomAndCenter(15, position as any);
   };
 
   const handleSearch = (value: string) => {
@@ -51,8 +100,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     autoComplete.current.search(value, (status, results) => {
       if (status === "complete") {
         const tips = results.tips.filter((item) => item.id);
-        console.log("tips", tips);
-        setOptions(tips);
+        setOptions(tips.filter((i) => i.location));
         setVisible(true);
       } else {
         setOptions([]);
@@ -63,7 +111,13 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
   const renderItem = (item: AMap.AutoComplete.Tip) => {
     return (
-      <div key={item.id} className={`${prefixCls}-dropdown-item`}>
+      <div
+        key={item.id}
+        className={`${prefixCls}-dropdown-item`}
+        onClick={() => {
+          handleSelect(item);
+        }}
+      >
         <p>{item.name}</p>
         <p>{item.district}</p>
       </div>
@@ -85,20 +139,59 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       />
       <Input.Search
         onSearch={handleSearch}
+        onFocus={() => {
+          options.length && setVisible(true);
+        }}
         onChange={(e) => {
           const val = e.target.value;
+          setTip(undefined);
           setSearchVal(val);
           handleSearch(val);
         }}
+        disabled={!!tip}
         value={searchVal}
         style={{ width: size === "small" ? 200 : 240 }}
         size={size}
         allowClear
         placeholder="请输入地址信息"
       />
-      {visible && (
+      {visible && !tip && (
         <div className={`${prefixCls}-dropdown`}>
           {options.length ? <>{options.map((i) => renderItem(i))}</> : empty}
+        </div>
+      )}
+      {visible && tip && (
+        <div
+          className={classNames(
+            `${prefixCls}-dropdown`,
+            `${prefixCls}-dropdown-tip`
+          )}
+        >
+          <Input
+            value={location}
+            onChange={(e) => {
+              setLocation(e.target.value);
+            }}
+            size="small"
+            style={{ width: 216 }}
+            className={classNames({
+              ["input-error"]: !!errorMsg,
+            })}
+          />
+          {errorMsg ? (
+            <p className="sen-error">{errorMsg}</p>
+          ) : (
+            <p className="sen-tip">可编辑地址名称</p>
+          )}
+          <p className="sen-district">{tip.district}</p>
+          <div
+            className="sen-btn"
+            onClick={() => {
+              setTip(undefined);
+            }}
+          >
+            重置
+          </div>
         </div>
       )}
     </div>

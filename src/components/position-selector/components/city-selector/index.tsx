@@ -4,6 +4,7 @@ import { Input } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import classNames from "@pansy/classnames";
 import { useMap } from "@pansy/react-amap";
+import { usePSContext } from "../context";
 import { useClickAway } from "ahooks";
 
 interface DivisionData {
@@ -28,6 +29,8 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
   const [citys, setCitys] = useState<DivisionData[]>([]);
   const [source, setSource] = useState<DivisionData[]>([]);
   const [curCity, setCurCity] = useState<string>("");
+
+  const { tip } = usePSContext()
 
   useEffect(() => {
     city && setCurCity(city);
@@ -79,9 +82,10 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
       <div
         className={classNames(`${prefixCls}-content`, {
           [`${prefixCls}-content-visible`]: visible,
+          [`${prefixCls}-content-disabled`]: !!tip
         })}
         onClick={() => {
-          setVisible(!visible);
+          !tip && setVisible(!visible);
         }}
       >
         {curCity}
