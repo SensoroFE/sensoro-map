@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import classNames from '@pansy/classnames';
 import { Button, Typography } from 'antd';
-import { CloseCircleFilled } from '@ant-design/icons';
+import CloseCircleOutlined from '@sensoro-design/icons/CloseCircleOutlined';
 import { Tree, Empty } from '@sensoro/sensoro-design';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { DeviceInfo } from '../../interface';
@@ -26,7 +26,7 @@ const ContentTree: React.FC<ContentProps> = ({ devices = [], onRemove }) => {
   const renderMenu = (node, hoverKey) => {
     if ((node.type === 'GB' || node.type === 'SENSORO') && hoverKey === node.key) {
       return (
-        <CloseCircleFilled
+        <CloseCircleOutlined
           className={`${prefixCls}-extra-icon `}
           onClick={() => {
             onRemove?.(node.key);
@@ -64,7 +64,7 @@ const ContentList: React.FC<ContentProps> = ({ devices = [], onRemove }) => {
                 onRemove?.(item.key);
               }}
             >
-              <CloseCircleFilled />
+              <CloseCircleOutlined />
             </div>
           </div>
         );

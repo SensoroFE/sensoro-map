@@ -1,5 +1,5 @@
 import { MenuData } from "@sensoro/sensoro-design/es/tree/tree";
-import { IconFontProps } from "@ant-design/icons/es/components/IconFont";
+import { IconBaseProps } from "@sensoro-design/icons/es/components/Icon";
 import { DeviceUsageType } from "./config";
 
 export type DeviceStatus = 0 | 1;
@@ -32,6 +32,11 @@ export interface ChannelStreamInfo {
 }
 
 export interface ChannelInfo extends ChannelBaseInfo, ChannelStreamInfo {}
+
+export interface IconFontProps<T extends string = string>
+  extends IconBaseProps {
+  type: T;
+}
 
 export interface ServerDeviceInfo {
   // 设备ID
@@ -72,6 +77,11 @@ export interface ServerDeviceInfo {
   flvUrl?: string;
   m3u8Url?: string;
   [key: string]: any;
+}
+
+export interface IconFontProps<T extends string = string>
+  extends IconBaseProps {
+  type: T;
 }
 
 export interface DeviceInfo {

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import classNames from '@pansy/classnames';
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import PlusOutlined from '@sensoro-design/icons/PlusOutlined';
+import MinusOutlined from '@sensoro-design/icons/MinusOutlined';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { useMap } from '@pansy/react-amap';
 import { ConfigContext } from '../../../config-provider';

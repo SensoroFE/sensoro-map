@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import classNames from '@pansy/classnames';
 import { useMap } from '@pansy/react-amap';
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import PlusOutlined from '@sensoro-design/icons/PlusOutlined';
+import MinusOutlined from '@sensoro-design/icons/MinusOutlined';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { LngLatArray } from '../../../../map/types';
 
