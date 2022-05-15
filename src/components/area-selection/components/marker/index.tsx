@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { CheckOutlined } from '@ant-design/icons';
+import CheckOutlined from '@sensoro-design/icons/CheckOutlined';
 import classNames from '@pansy/classnames';
 import Icon from '@sensoro/sensoro-design/es/icon';
 import { DeviceInfo } from '../../interface';

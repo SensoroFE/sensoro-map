@@ -1,10 +1,10 @@
-import { MenuData } from '@sensoro/sensoro-design/es/tree/tree';
-import { IconFontProps } from '@ant-design/icons/es/components/IconFont';
-import { DeviceUsageType } from './config';
+import { MenuData } from "@sensoro/sensoro-design/es/tree/tree";
+import { IconBaseProps } from "@sensoro-design/icons/es/components/Icon";
+import { DeviceUsageType } from "./config";
 
 export type DeviceStatus = 0 | 1;
-export type GBDeviceStatus = 'online' | 'offline' | 'unregistered';
-export type OperationType = 'circle' | 'rectangle' | 'polygon' | undefined;
+export type GBDeviceStatus = "online" | "offline" | "unregistered";
+export type OperationType = "circle" | "rectangle" | "polygon" | undefined;
 
 export interface ChannelBaseInfo {
   // 通道编号
@@ -63,6 +63,11 @@ export interface ServerDeviceInfo {
   [key: string]: any;
 }
 
+export interface IconFontProps<T extends string = string>
+  extends IconBaseProps {
+  type: T;
+}
+
 export interface DeviceInfo {
   // 设备编号
   sn: string;
@@ -73,7 +78,7 @@ export interface DeviceInfo {
   // 左侧操作配置
   menus?: MenuData[];
   // 设备类型
-  type: 'GB' | 'SENSORO';
+  type: "GB" | "SENSORO";
   // 设备经纬度 - 前端使用
   position: {
     longitude: number;

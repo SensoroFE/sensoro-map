@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import { useMap } from "@pansy/react-amap";
-import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import PlusOutlined from '@sensoro-design/icons/PlusOutlined';
+import MinusOutlined from '@sensoro-design/icons/MinusOutlined';
 import { LngLatArray } from "../../../../map/types";
 import { Tooltip, Popover } from "antd";
 import classNames from "@pansy/classnames";

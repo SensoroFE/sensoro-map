@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import { ChinaDivision } from "../../../../map";
 import { Input } from "antd";
-import { CaretDownOutlined } from "@ant-design/icons";
+import CaretDownOutlined from '@sensoro-design/icons/CaretDownOutlined';
 import classNames from "@pansy/classnames";
 import { useMap } from "@pansy/react-amap";
 import { usePSContext } from "../context";
