@@ -5,7 +5,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import classNames from "@pansy/classnames";
 import { useMap } from "@pansy/react-amap";
 import { usePSContext } from "../context";
-import { useClickAway } from "ahooks";
+import { useClickAway } from "@pansy/react-hooks";
 
 interface DivisionData {
   label: string;
