@@ -28,10 +28,16 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const { prefixCls, onChange, small = false, city } = props;
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const [options, setOptions] = useState([]);
-  const [location, setLocation] = useState<undefined | string>(undefined);
+  const [loca, setLoca] = useState<undefined | string>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const { tip, setTip, dropVisible, setDropVisible, setCenterPostion } = usePSContext();
+  const {
+    tip,
+    setTip,
+    dropVisible,
+    setDropVisible,
+    setCenterPostion,
+  } = usePSContext();
 
   const handleMapEvents = () => {
     !tip && setDropVisible(false);
@@ -55,32 +61,35 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     debounce(() => {
       setErrorMsg("");
       if (tip?.location) {
-        if (!location) {
+        if (!loca) {
           setErrorMsg("名称不能为空");
           return;
-        } else if (location.length > 50) {
+        } else if (loca.length > 50) {
           setErrorMsg("名称不能超过50个字");
           return;
-        } else if (!nameRegexp.test(location)) {
+        } else if (!nameRegexp.test(loca)) {
           setErrorMsg("名称包含异常字符");
           return;
         }
-        const point = [tip.location.lng, tip.location.lat];
+        const tipLoca = tip?.location;
+        const point = Array.isArray(tipLoca)
+          ? tipLoca
+          : [tipLoca.lng, tipLoca.lat];
         onChange?.({
           lnglat: point as any,
-          location,
+          location: loca,
         });
       } else {
         setErrorMsg("");
       }
     }, 200),
-    [location, tip]
+    [loca, tip]
   );
 
   useEffect(() => {
     setErrorMsg("");
     if (tip) {
-      tip.name && setLocation(tip.name);
+      tip.name && setLoca(tip.name);
     }
     map.on("click", handleMapEvents);
     return () => {
@@ -182,9 +191,9 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
           )}
         >
           <Input
-            value={location}
+            value={loca}
             onChange={(e) => {
-              setLocation(e.target.value);
+              setLoca(e.target.value);
             }}
             size="small"
             style={{ width: small ? 176 : 216 }}

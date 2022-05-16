@@ -11,7 +11,7 @@ import { LngLatArray } from "../../map/types";
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
 import { fetchCityMsgLnglat } from "../../services/map";
-import { debounce } from "lodash";
+import { debounce, isEqual } from "lodash";
 import "./style";
 
 export type PositionValue = {
@@ -72,6 +72,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
+    if(centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat)) return;
     if (lnglat[0] && lnglat[1]) {
       setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
@@ -79,13 +80,15 @@ const PositionSelector: React.FC<PositionProps> = ({
         name: value.location || "",
         location: lnglat,
       } as AMap.AutoComplete.Tip);
+      setDropVisible(true);
       /** 自动定位城市 */
       (async () => {
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
         c && typeof c === 'string' && setCity(c);
       })();
     }
-  }, [value]);
+  }, [value?.lnglat, value?.location]);
+
 
   useEffect(() => {
     if (!tip && centerPostion?.lnglat) {
@@ -99,7 +102,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
         c &&  typeof c === 'string' && city !== c && setCity(c);
       })();
-      onChange?.(centerPostion);
+      // onChange?.(centerPostion);
     }
   }, [centerPostion, tip]);
 
@@ -132,7 +135,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         city={city}
         small={small}
         onChange={(v) => {
-          v.lnglat && setMarkerPosition(value.lnglat);
+          v.lnglat && setMarkerPosition(v.lnglat);
           onChange?.(v);
         }}
       />
@@ -153,7 +156,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         created: (ins) => {
           mapIns.current = ins;
         },
-        moveend: handleMapMoveEnd,
+        moveend:  handleMapMoveEnd,
       }}
     >
       <PSContextProvider
@@ -182,6 +185,7 @@ const PositionSelector: React.FC<PositionProps> = ({
                 onLocation={(c) => {
                   setCity(c);
                 }}
+                resetView= {!!value?.lnglat}
               />
             )}
           </>
