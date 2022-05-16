@@ -10,6 +10,7 @@ import { LngLatArray } from "../../map/types";
 // @ts-ignore
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
+import { fetchCityMsgLnglat } from "../../services/map";
 import "./style";
 
 export type PositionValue = {
@@ -67,11 +68,21 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [city, setCity] = useState<string>("");
   const [clickInfo, setClickInfo] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
+  const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
     if (lnglat[0] && lnglat[1]) {
       setMarkerPosition(lnglat as AMap.LngLat);
+      setTip({
+        name: value.location || "",
+        location: lnglat,
+      } as AMap.AutoComplete.Tip);
+      /** 自动定位城市 */
+      (async () => {
+        const c = (await fetchCityMsgLnglat(lnglat)) as string;
+        c && setCity(c);
+      })();
     }
 
     if (!disabledFitView) {
@@ -123,7 +134,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         }}
       />
     );
-  }, [city, small]);
+  }, [city, small, dropVisible]);
 
   return (
     <Map
@@ -147,7 +158,12 @@ const PositionSelector: React.FC<PositionProps> = ({
         },
       }}
     >
-      <PSContextProvider tip={tip} setTip={setTip}>
+      <PSContextProvider
+        tip={tip}
+        setTip={setTip}
+        dropVisible={dropVisible}
+        setDropVisible={setDropVisible}
+      >
         {!isReadOnly && (
           <>
             {SearchAdressDom}
@@ -161,7 +177,7 @@ const PositionSelector: React.FC<PositionProps> = ({
             {citySelector && city && (
               <CitySelector small={small} city={city} onChange={setCity} />
             )}
-            {citySelector && (
+            {!location && citySelector && (
               <CityLocation
                 onLocation={(c) => {
                   setCity(c);

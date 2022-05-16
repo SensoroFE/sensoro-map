@@ -3,6 +3,8 @@ import React, { FC, createContext, useContext } from "react";
 interface PSContextData {
   tip: AMap.AutoComplete.Tip;
   setTip: (tip: AMap.AutoComplete.Tip) => void;
+  dropVisible: boolean;
+  setDropVisible: (visible: boolean) => void;
 }
 
 export const PSContext = createContext<PSContextData>({} as PSContextData);

@@ -28,26 +28,30 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const { prefixCls, onChange, small = false, city } = props;
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const [options, setOptions] = useState([]);
-  const [visible, setVisible] = useState<boolean>(false);
   const [location, setLocation] = useState<undefined | string>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const { tip, setTip } = usePSContext();
+  const { tip, setTip, dropVisible, setDropVisible } = usePSContext();
+
+  console.log("tip", tip, dropVisible);
 
   const handleMapEvents = () => {
-    !tip && setVisible(false);
+    !tip && setDropVisible(false);
   };
 
   useEffect(() => {
     autoComplete?.current?.setCity(city || "全国");
     autoComplete?.current?.setCityLimit(!!city);
     setOptions([]);
-    setVisible(false);
   }, [city]);
 
   useEffect(() => {
-    if (!searchVal) setVisible(false);
-  }, [searchVal]);
+    if (!tip && city) setDropVisible(false);
+  }, [city, tip]);
+
+  useEffect(() => {
+    if (!searchVal && !tip) setDropVisible(false);
+  }, [searchVal, tip]);
 
   useEffect(
     debounce(() => {
@@ -101,10 +105,10 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       if (status === "complete") {
         const tips = results.tips.filter((item) => item.id);
         setOptions(tips.filter((i) => i.location));
-        setVisible(true);
+        setDropVisible(true);
       } else {
         setOptions([]);
-        setVisible(true);
+        setDropVisible(true);
       }
     });
   };
@@ -145,7 +149,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       <Input.Search
         onSearch={handleSearch}
         onFocus={() => {
-          options.length && setVisible(true);
+          options.length && setDropVisible(true);
         }}
         onChange={(e) => {
           const val = e.target.value;
@@ -160,7 +164,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         allowClear
         placeholder="请输入地址信息"
       />
-      {visible && !tip && (
+      {dropVisible && !tip && (
         <div
           className={classNames(`${prefixCls}-dropdown`, {
             [`${prefixCls}-dropdown-small`]: !!small,
@@ -169,7 +173,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
           {options.length ? <>{options.map((i) => renderItem(i))}</> : empty}
         </div>
       )}
-      {visible && tip && (
+      {dropVisible && tip && (
         <div
           className={classNames(
             `${prefixCls}-dropdown`,
