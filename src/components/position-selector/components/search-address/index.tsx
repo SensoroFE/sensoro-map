@@ -28,57 +28,68 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const { prefixCls, onChange, small = false, city } = props;
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
   const [options, setOptions] = useState([]);
-  const [visible, setVisible] = useState<boolean>(false);
-  const [location, setLocation] = useState<undefined | string>(undefined);
+  const [loca, setLoca] = useState<undefined | string>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const { tip, setTip } = usePSContext();
+  const {
+    tip,
+    setTip,
+    dropVisible,
+    setDropVisible,
+    setCenterPostion,
+  } = usePSContext();
 
   const handleMapEvents = () => {
-    !tip && setVisible(false);
+    !tip && setDropVisible(false);
   };
 
   useEffect(() => {
     autoComplete?.current?.setCity(city || "全国");
     autoComplete?.current?.setCityLimit(!!city);
     setOptions([]);
-    setVisible(false);
   }, [city]);
 
   useEffect(() => {
-    if (!searchVal) setVisible(false);
-  }, [searchVal]);
+    if (!tip && city) setDropVisible(false);
+  }, [city, tip]);
+
+  useEffect(() => {
+    if (!searchVal && !tip) setDropVisible(false);
+  }, [searchVal, tip]);
 
   useEffect(
     debounce(() => {
       setErrorMsg("");
       if (tip?.location) {
-        if (!location) {
+        if (!loca) {
           setErrorMsg("名称不能为空");
           return;
-        } else if (location.length > 50) {
+        } else if (loca.length > 50) {
           setErrorMsg("名称不能超过50个字");
           return;
-        } else if (!nameRegexp.test(location)) {
+        } else if (!nameRegexp.test(loca)) {
           setErrorMsg("名称包含异常字符");
           return;
         }
-        const point = [tip.location.lng, tip.location.lat];
+        const tipLoca = tip?.location;
+        const point = Array.isArray(tipLoca)
+          ? tipLoca
+          : [tipLoca.lng, tipLoca.lat];
         onChange?.({
           lnglat: point as any,
-          location,
+          location: loca,
         });
       } else {
         setErrorMsg("");
       }
     }, 200),
-    [location, tip]
+    [loca, tip]
   );
 
   useEffect(() => {
     setErrorMsg("");
     if (tip) {
-      tip.name && setLocation(tip.name);
+      tip.name && setLoca(tip.name);
     }
     map.on("click", handleMapEvents);
     return () => {
@@ -101,10 +112,10 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       if (status === "complete") {
         const tips = results.tips.filter((item) => item.id);
         setOptions(tips.filter((i) => i.location));
-        setVisible(true);
+        setDropVisible(true);
       } else {
         setOptions([]);
-        setVisible(true);
+        setDropVisible(true);
       }
     });
   };
@@ -145,7 +156,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       <Input.Search
         onSearch={handleSearch}
         onFocus={() => {
-          options.length && setVisible(true);
+          options.length && setDropVisible(true);
         }}
         onChange={(e) => {
           const val = e.target.value;
@@ -160,7 +171,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         allowClear
         placeholder="请输入地址信息"
       />
-      {visible && !tip && (
+      {dropVisible && !tip && (
         <div
           className={classNames(`${prefixCls}-dropdown`, {
             [`${prefixCls}-dropdown-small`]: !!small,
@@ -169,20 +180,23 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
           {options.length ? <>{options.map((i) => renderItem(i))}</> : empty}
         </div>
       )}
-      {visible && tip && (
+      {dropVisible && tip && (
         <div
           className={classNames(
             `${prefixCls}-dropdown`,
-            `${prefixCls}-dropdown-tip`
+            `${prefixCls}-dropdown-tip`,
+            {
+              [`${prefixCls}-dropdown-small`]: !!small,
+            }
           )}
         >
           <Input
-            value={location}
+            value={loca}
             onChange={(e) => {
-              setLocation(e.target.value);
+              setLoca(e.target.value);
             }}
             size="small"
-            style={{ width: 216 }}
+            style={{ width: small ? 176 : 216 }}
             className={classNames({
               ["input-error"]: !!errorMsg,
             })}
@@ -197,6 +211,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             className="sen-btn"
             onClick={() => {
               setTip(undefined);
+              setCenterPostion(undefined);
             }}
           >
             重置

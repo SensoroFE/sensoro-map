@@ -10,11 +10,13 @@ import { LngLatArray } from "../../map/types";
 // @ts-ignore
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
+import { fetchCityMsgLnglat } from "../../services/map";
+import { debounce, isEqual } from "lodash";
 import "./style";
 
 export type PositionValue = {
-  lnglat?: AMap.LngLat;
-  location?: string;
+  lnglat: AMap.LngLat;
+  location: string;
 };
 
 export interface PositionProps extends MapProps {
@@ -58,35 +60,51 @@ const PositionSelector: React.FC<PositionProps> = ({
   children,
   ...rest
 }) => {
-  const lock = useRef<boolean>(false);
   const mapIns = useRef<AMap.Map>();
   const { lnglat = [] } = value || {};
   const [center, setCenter] = useState<LngLatArray>();
   const geocoder = useRef<AMap.Geocoder>();
   const [markerPosition, setMarkerPosition] = useState<AMap.LngLat>();
   const [city, setCity] = useState<string>("");
-  const [clickInfo, setClickInfo] = useState<PositionValue>();
+  const [centerPostion, setCenterPostion] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
+  const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
+    if(centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat)) return;
     if (lnglat[0] && lnglat[1]) {
+      setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
+      setTip({
+        name: value.location || "",
+        location: lnglat,
+      } as AMap.AutoComplete.Tip);
+      setDropVisible(true);
+      /** 自动定位城市 */
+      (async () => {
+        const c = (await fetchCityMsgLnglat(lnglat)) as string;
+        c && typeof c === 'string' && setCity(c);
+      })();
     }
+  }, [value?.lnglat, value?.location]);
 
-    if (!disabledFitView) {
-      if (!lock.current && lnglat[0]) {
-        setCenter(lnglat as LngLatArray);
-      }
-    }
-  }, [value]);
 
   useEffect(() => {
-    if (!tip && clickInfo?.lnglat) {
-      setMarkerPosition(clickInfo?.lnglat);
-      onChange?.(clickInfo);
+    if (!tip && centerPostion?.lnglat) {
+      setMarkerPosition(centerPostion?.lnglat);
+      setTip({
+        name: centerPostion.location || "",
+        location: centerPostion.lnglat,
+      } as AMap.AutoComplete.Tip);
+      setDropVisible(true);
+      (async () => {
+        const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
+        c &&  typeof c === 'string' && city !== c && setCity(c);
+      })();
+      // onChange?.(centerPostion);
     }
-  }, [clickInfo, tip]);
+  }, [centerPostion, tip]);
 
   const prefixCls = getPrefixCls("position");
 
@@ -94,60 +112,61 @@ const PositionSelector: React.FC<PositionProps> = ({
     <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
   );
 
-  const handleMapClick = (lnglat: AMap.LngLat) => {
+  const handleMapMoveEnd = debounce(() => {
     if (isReadOnly) return;
-
+    const lnglat = mapIns.current?.getCenter?.();
     if (geocoder.current) {
       geocoder.current.getAddress(lnglat, (status, result) => {
         let address = "";
-
         if (status === "complete" && result.regeocode) {
           address = result.regeocode.formattedAddress;
+          setCenterPostion({
+            lnglat: lnglat.toArray() as any,
+            location: address,
+          });
         }
-        setClickInfo({
-          lnglat: lnglat.toArray() as any,
-          location: address,
-        });
       });
     }
-  };
+  }, 500);
 
   const SearchAdressDom = useMemo(() => {
     return (
       <SearchAddress
         city={city}
         small={small}
-        onChange={(value) => {
-          value.lnglat && setMarkerPosition(value.lnglat);
-          onChange?.(value);
+        onChange={(v) => {
+          v.lnglat && setMarkerPosition(v.lnglat);
+          onChange?.(v);
         }}
       />
     );
-  }, [city, small]);
+  }, [city, small, dropVisible]);
 
   return (
     <Map
       className={classNames(className, {
         [`${prefixCls}`]: true,
       })}
+      center={center}
       style={style}
       zoom={zoom}
-      center={center}
       {...rest}
       events={{
         ...(rest?.events ?? {}),
         created: (ins) => {
           mapIns.current = ins;
         },
-        click: (e) => {
-          const lnglat = e.lnglat;
-          if (lnglat) {
-            handleMapClick(lnglat);
-          }
-        },
+        moveend:  handleMapMoveEnd,
       }}
     >
-      <PSContextProvider tip={tip} setTip={setTip}>
+      <PSContextProvider
+        tip={tip}
+        setTip={setTip}
+        dropVisible={dropVisible}
+        setDropVisible={setDropVisible}
+        centerPostion={centerPostion}
+        setCenterPostion={setCenterPostion}
+      >
         {!isReadOnly && (
           <>
             {SearchAdressDom}
@@ -161,11 +180,12 @@ const PositionSelector: React.FC<PositionProps> = ({
             {citySelector && city && (
               <CitySelector small={small} city={city} onChange={setCity} />
             )}
-            {citySelector && (
+            {!value?.lnglat && citySelector && (
               <CityLocation
                 onLocation={(c) => {
                   setCity(c);
                 }}
+                resetView= {!!value?.lnglat}
               />
             )}
           </>
