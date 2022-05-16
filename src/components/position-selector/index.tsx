@@ -74,6 +74,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   useEffect(() => {
     if(centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat)) return;
     if (lnglat[0] && lnglat[1]) {
+      // @ts-ignore
       setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
       setTip({
