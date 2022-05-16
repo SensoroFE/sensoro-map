@@ -60,7 +60,6 @@ const PositionSelector: React.FC<PositionProps> = ({
   children,
   ...rest
 }) => {
-  const lock = useRef<boolean>(false);
   const mapIns = useRef<AMap.Map>();
   const { lnglat = [] } = value || {};
   const [center, setCenter] = useState<LngLatArray>();
@@ -74,6 +73,7 @@ const PositionSelector: React.FC<PositionProps> = ({
 
   useEffect(() => {
     if (lnglat[0] && lnglat[1]) {
+      setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
       setTip({
         name: value.location || "",
@@ -82,14 +82,8 @@ const PositionSelector: React.FC<PositionProps> = ({
       /** 自动定位城市 */
       (async () => {
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
-        c && setCity(c);
+        c && typeof c === 'string' && setCity(c);
       })();
-    }
-
-    if (!disabledFitView) {
-      if (!lock.current && lnglat[0]) {
-        setCenter(lnglat as LngLatArray);
-      }
     }
   }, [value]);
 
@@ -103,7 +97,7 @@ const PositionSelector: React.FC<PositionProps> = ({
       setDropVisible(true);
       (async () => {
         const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
-        c && city !== c && setCity(c);
+        c &&  typeof c === 'string' && city !== c && setCity(c);
       })();
       onChange?.(centerPostion);
     }
@@ -121,26 +115,25 @@ const PositionSelector: React.FC<PositionProps> = ({
     if (geocoder.current) {
       geocoder.current.getAddress(lnglat, (status, result) => {
         let address = "";
-
         if (status === "complete" && result.regeocode) {
           address = result.regeocode.formattedAddress;
+          setCenterPostion({
+            lnglat: lnglat.toArray() as any,
+            location: address,
+          });
         }
-        setCenterPostion({
-          lnglat: lnglat.toArray() as any,
-          location: address,
-        });
       });
     }
-  }, 200);
+  }, 500);
 
   const SearchAdressDom = useMemo(() => {
     return (
       <SearchAddress
         city={city}
         small={small}
-        onChange={(value) => {
-          value.lnglat && setMarkerPosition(value.lnglat);
-          onChange?.(value);
+        onChange={(v) => {
+          v.lnglat && setMarkerPosition(value.lnglat);
+          onChange?.(v);
         }}
       />
     );
@@ -151,9 +144,9 @@ const PositionSelector: React.FC<PositionProps> = ({
       className={classNames(className, {
         [`${prefixCls}`]: true,
       })}
+      center={center}
       style={style}
       zoom={zoom}
-      center={center}
       {...rest}
       events={{
         ...(rest?.events ?? {}),
@@ -184,7 +177,7 @@ const PositionSelector: React.FC<PositionProps> = ({
             {citySelector && city && (
               <CitySelector small={small} city={city} onChange={setCity} />
             )}
-            {!location && citySelector && (
+            {!value?.lnglat && citySelector && (
               <CityLocation
                 onLocation={(c) => {
                   setCity(c);

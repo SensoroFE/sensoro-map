@@ -18,8 +18,14 @@ export const fetchCityMsgLnglat = (lnglat: any) => {
       .then((data) => data.json())
       .then((res = {}) => {
         const { regeocode, info } = res;
-        if (info?.toLowerCase() === "ok" && regeocode)
-          resolve(regeocode?.addressComponent?.city || "");
+        if (info?.toLowerCase() === "ok" && regeocode) {
+          const city = regeocode?.addressComponent?.city;
+          resolve(
+            typeof city === "string"
+              ? city
+              : regeocode?.addressComponent?.province || ""
+          );
+        }
       })
       .catch((error) => {
         console.info("======>逆地理编码查询坐标位置信息失败", error);

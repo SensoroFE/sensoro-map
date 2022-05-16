@@ -175,7 +175,10 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         <div
           className={classNames(
             `${prefixCls}-dropdown`,
-            `${prefixCls}-dropdown-tip`
+            `${prefixCls}-dropdown-tip`,
+            {
+              [`${prefixCls}-dropdown-small`]: !!small,
+            }
           )}
         >
           <Input
@@ -184,7 +187,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
               setLocation(e.target.value);
             }}
             size="small"
-            style={{ width: 216 }}
+            style={{ width: small ? 176 : 216 }}
             className={classNames({
               ["input-error"]: !!errorMsg,
             })}
