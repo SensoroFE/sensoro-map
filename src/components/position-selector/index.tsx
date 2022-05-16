@@ -11,11 +11,12 @@ import { LngLatArray } from "../../map/types";
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
 import { fetchCityMsgLnglat } from "../../services/map";
+import { debounce } from "lodash";
 import "./style";
 
 export type PositionValue = {
-  lnglat?: AMap.LngLat;
-  location?: string;
+  lnglat: AMap.LngLat;
+  location: string;
 };
 
 export interface PositionProps extends MapProps {
@@ -66,7 +67,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   const geocoder = useRef<AMap.Geocoder>();
   const [markerPosition, setMarkerPosition] = useState<AMap.LngLat>();
   const [city, setCity] = useState<string>("");
-  const [clickInfo, setClickInfo] = useState<PositionValue>();
+  const [centerPostion, setCenterPostion] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
@@ -93,11 +94,20 @@ const PositionSelector: React.FC<PositionProps> = ({
   }, [value]);
 
   useEffect(() => {
-    if (!tip && clickInfo?.lnglat) {
-      setMarkerPosition(clickInfo?.lnglat);
-      onChange?.(clickInfo);
+    if (!tip && centerPostion?.lnglat) {
+      setMarkerPosition(centerPostion?.lnglat);
+      setTip({
+        name: centerPostion.location || "",
+        location: centerPostion.lnglat,
+      } as AMap.AutoComplete.Tip);
+      setDropVisible(true);
+      (async () => {
+        const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
+        c && city !== c && setCity(c);
+      })();
+      onChange?.(centerPostion);
     }
-  }, [clickInfo, tip]);
+  }, [centerPostion, tip]);
 
   const prefixCls = getPrefixCls("position");
 
@@ -105,9 +115,9 @@ const PositionSelector: React.FC<PositionProps> = ({
     <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
   );
 
-  const handleMapClick = (lnglat: AMap.LngLat) => {
+  const handleMapMoveEnd = debounce(() => {
     if (isReadOnly) return;
-
+    const lnglat = mapIns.current?.getCenter?.();
     if (geocoder.current) {
       geocoder.current.getAddress(lnglat, (status, result) => {
         let address = "";
@@ -115,13 +125,13 @@ const PositionSelector: React.FC<PositionProps> = ({
         if (status === "complete" && result.regeocode) {
           address = result.regeocode.formattedAddress;
         }
-        setClickInfo({
+        setCenterPostion({
           lnglat: lnglat.toArray() as any,
           location: address,
         });
       });
     }
-  };
+  }, 200);
 
   const SearchAdressDom = useMemo(() => {
     return (
@@ -150,12 +160,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         created: (ins) => {
           mapIns.current = ins;
         },
-        click: (e) => {
-          const lnglat = e.lnglat;
-          if (lnglat) {
-            handleMapClick(lnglat);
-          }
-        },
+        moveend: handleMapMoveEnd,
       }}
     >
       <PSContextProvider
@@ -163,6 +168,8 @@ const PositionSelector: React.FC<PositionProps> = ({
         setTip={setTip}
         dropVisible={dropVisible}
         setDropVisible={setDropVisible}
+        centerPostion={centerPostion}
+        setCenterPostion={setCenterPostion}
       >
         {!isReadOnly && (
           <>

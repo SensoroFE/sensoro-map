@@ -31,9 +31,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const [location, setLocation] = useState<undefined | string>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const { tip, setTip, dropVisible, setDropVisible } = usePSContext();
-
-  console.log("tip", tip, dropVisible);
+  const { tip, setTip, dropVisible, setDropVisible, setCenterPostion } = usePSContext();
 
   const handleMapEvents = () => {
     !tip && setDropVisible(false);
@@ -201,6 +199,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             className="sen-btn"
             onClick={() => {
               setTip(undefined);
+              setCenterPostion(undefined);
             }}
           >
             重置
