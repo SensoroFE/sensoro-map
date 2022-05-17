@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import { ChinaDivision } from "../../../../map";
-import { Input } from "antd";
+import { Input, message } from "antd";
 import CaretDownOutlined from '@sensoro-design/icons/CaretDownOutlined';
 import classNames from "@pansy/classnames";
 import { useMap } from "@pansy/react-amap";
@@ -38,6 +38,10 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
   }, [city]);
 
   useEffect(() => {
+    setCitys(source);
+  }, [visible]);
+
+  useEffect(() => {
     source?.length && setCitys(source);
   }, [source]);
 
@@ -62,6 +66,7 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
       });
       setCitys(fitledCity);
     } else {
+      message.error('暂无搜索结果 ')
       setCitys(source);
     }
   };
