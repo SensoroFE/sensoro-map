@@ -66,7 +66,7 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
       });
       setCitys(fitledCity);
     } else {
-      message.error('暂无搜索结果 ')
+      message.error('暂无匹配城市')
       setCitys(source);
     }
   };
