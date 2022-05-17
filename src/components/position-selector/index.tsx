@@ -17,6 +17,7 @@ import "./style";
 export type PositionValue = {
   lnglat: AMap.LngLat;
   location: string;
+  district?: string;
 };
 
 export interface PositionProps extends MapProps {
@@ -68,11 +69,13 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [city, setCity] = useState<string>("");
   const [centerPostion, setCenterPostion] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
+  const [options, setOptions] = useState<any[]>([]);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
 
   useEffect(() => {
-    if(centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat)) return;
+    if (centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat))
+      return;
     if (lnglat[0] && lnglat[1]) {
       setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
@@ -84,23 +87,30 @@ const PositionSelector: React.FC<PositionProps> = ({
       /** 自动定位城市 */
       (async () => {
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
-        c && typeof c === 'string' && setCity(c);
+        c && typeof c === "string" && setCity(c);
       })();
     }
   }, [value?.lnglat, value?.location]);
 
-
   useEffect(() => {
-    if (!tip && centerPostion?.lnglat) {
-      setMarkerPosition(centerPostion?.lnglat);
-      setTip({
-        name: centerPostion.location || "",
-        location: centerPostion.lnglat,
-      } as AMap.AutoComplete.Tip);
+    if (centerPostion?.lnglat && !tip) {
+      const p = centerPostion?.lnglat;
+      setMarkerPosition(p);
+      setTip(undefined);
+      setOptions([
+        {
+          id: Math.random(),
+          name: centerPostion.location,
+          location: centerPostion.location,
+          district: centerPostion?.district || "",
+          lng: p[0],
+          lat: p[1],
+        },
+      ]);
       setDropVisible(true);
       (async () => {
         const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
-        c &&  typeof c === 'string' && city !== c && setCity(c);
+        c && typeof c === "string" && city !== c && setCity(c);
       })();
       // onChange?.(centerPostion);
     }
@@ -112,22 +122,26 @@ const PositionSelector: React.FC<PositionProps> = ({
     <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
   );
 
-  const handleMapMoveEnd = debounce(() => {
+  const handleMapMoveEnd = () => {
     if (isReadOnly) return;
     const lnglat = mapIns.current?.getCenter?.();
     if (geocoder.current) {
       geocoder.current.getAddress(lnglat, (status, result) => {
         let address = "";
         if (status === "complete" && result.regeocode) {
-          address = result.regeocode.formattedAddress;
+          const regeocode = result.regeocode;
+          address = regeocode.formattedAddress;
+          const { city, province, district } = regeocode?.addressComponent || {};
+          let dis = `${province}${Array.isArray(city) ? "" : city}${district}`;
           setCenterPostion({
             lnglat: lnglat.toArray() as any,
             location: address,
+            district: dis
           });
         }
       });
     }
-  }, 500);
+  };
 
   const SearchAdressDom = useMemo(() => {
     return (
@@ -156,7 +170,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         created: (ins) => {
           mapIns.current = ins;
         },
-        moveend:  handleMapMoveEnd,
+        moveend: handleMapMoveEnd,
       }}
     >
       <PSContextProvider
@@ -166,6 +180,8 @@ const PositionSelector: React.FC<PositionProps> = ({
         setDropVisible={setDropVisible}
         centerPostion={centerPostion}
         setCenterPostion={setCenterPostion}
+        options={options}
+        setOptions={setOptions}
       >
         {!isReadOnly && (
           <>
@@ -185,18 +201,32 @@ const PositionSelector: React.FC<PositionProps> = ({
                 onLocation={(c) => {
                   setCity(c);
                 }}
-                resetView= {!!value?.lnglat}
+                resetView={!!value?.lnglat}
               />
             )}
           </>
         )}
         <Tools small={small} />
       </PSContextProvider>
-      <Marker
-        position={markerPosition}
-        render={() => PositionIcon}
-        {...marker}
-      />
+      {!tip && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -100%)",
+          }}
+        >
+          {PositionIcon}
+        </div>
+      )}
+      {tip && (
+        <Marker
+          position={markerPosition}
+          render={() => PositionIcon}
+          {...marker}
+        />
+      )}
 
       {children}
     </Map>
