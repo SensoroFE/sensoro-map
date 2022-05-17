@@ -27,7 +27,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   const { map } = useMap();
   const { prefixCls, onChange, small = false, city } = props;
   const [searchVal, setSearchVal] = useState<string | undefined>(undefined);
-  const [options, setOptions] = useState([]);
   const [loca, setLoca] = useState<undefined | string>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
@@ -37,6 +36,8 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     dropVisible,
     setDropVisible,
     setCenterPostion,
+    options,
+    setOptions,
   } = usePSContext();
 
   const handleMapEvents = () => {
@@ -99,10 +100,10 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
   const handleSelect = (item: AMap.AutoComplete.Tip) => {
     setErrorMsg("");
-    const loca = item.location;
-    if (!loca) return;
+    const locat = item.location;
+    if (!locat) return;
     setTip(item);
-    const position = [loca.lng, loca.lat];
+    const position = [locat.lng, locat.lat];
     map?.setZoomAndCenter(15, position as any);
   };
 
@@ -130,7 +131,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         }}
       >
         <p>{item.name}</p>
-        <p>{item.district}</p>
+        <p>{item.district || ''}</p>
       </div>
     );
   };

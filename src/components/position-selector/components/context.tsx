@@ -1,5 +1,5 @@
 import React, { FC, createContext, useContext } from "react";
-import { PositionValue } from '../';
+import { PositionValue } from "../";
 
 interface PSContextData {
   tip: AMap.AutoComplete.Tip;
@@ -8,6 +8,8 @@ interface PSContextData {
   setDropVisible: (visible: boolean) => void;
   centerPostion: PositionValue;
   setCenterPostion: (position: PositionValue) => void;
+  options: any[];
+  setOptions: (opt: any[]) => void;
 }
 
 export const PSContext = createContext<PSContextData>({} as PSContextData);
