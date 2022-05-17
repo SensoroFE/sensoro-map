@@ -75,7 +75,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         const tipLoca = tip?.location;
         const point = Array.isArray(tipLoca)
           ? tipLoca
-          : [tipLoca.lng, tipLoca.lat];
+          : [tip?.lng, tip?.lat];
         onChange?.({
           lnglat: point as any,
           location: loca,
