@@ -10,7 +10,7 @@ import classNames from "@pansy/classnames";
 // 中英文、数字、空格、英文·、英文.、英文_，不能以空格开头
 // eslint-disable-next-line
 const nameRegexp = new RegExp(
-  "^[-a-zA-Z\\u4E00-\\u9FA5\\d\\.\\_\\·][-a-zA-Z()+=\\u4E00-\\u9FA5\\d\\s\\.\\_\\·]*$"
+  "^[-,，。.、a-zA-Z\\u4E00-\\u9FA5\\d\\.\\_\\·][-,，.。、a-zA-Z()+=\\u4E00-\\u9FA5\\d\\s\\.\\_\\·]*$"
 );
 
 export interface SearchAddressProps extends AutoCompleteProps {
@@ -221,6 +221,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             onClick={() => {
               setTip(undefined);
               setCenterPostion(undefined);
+              onChange?.(undefined);
             }}
           >
             重置

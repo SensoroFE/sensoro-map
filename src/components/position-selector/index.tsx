@@ -150,7 +150,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         city={city}
         small={small}
         onChange={(v) => {
-          v.lnglat && setMarkerPosition(v.lnglat);
+          v?.lnglat && setMarkerPosition(v.lnglat);
           onChange?.(v);
         }}
       />
