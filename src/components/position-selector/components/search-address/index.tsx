@@ -10,7 +10,7 @@ import classNames from "@pansy/classnames";
 // 中英文、数字、空格、英文·、英文.、英文_，不能以空格开头
 // eslint-disable-next-line
 const nameRegexp = new RegExp(
-  "^[a-zA-Z\\u4E00-\\u9FA5\\d\\.\\_\\·][a-zA-Z()+=\\u4E00-\\u9FA5\\d\\s\\.\\_\\·]*$"
+  "^[-a-zA-Z\\u4E00-\\u9FA5\\d\\.\\_\\·][-a-zA-Z()+=\\u4E00-\\u9FA5\\d\\s\\.\\_\\·]*$"
 );
 
 export interface SearchAddressProps extends AutoCompleteProps {
@@ -104,7 +104,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     if (!locat) return;
     setTip(item);
     const position = [locat.lng, locat.lat];
-    map?.setZoomAndCenter(15, position as any);
+    map?.setCenter(position as any);
   };
 
   const handleSearch = (value: string) => {
@@ -131,12 +131,20 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         }}
       >
         <p>{item.name}</p>
-        <p>{item.district || ''}</p>
+        <p>{item.district || ""}</p>
       </div>
     );
   };
 
-  const empty = <p className={`${prefixCls}-empty`}>无搜索结果</p>;
+  const empty = (
+    <p
+      className={classNames(`${prefixCls}-empty`, {
+        [`${prefixCls}-empty-small`]: !!small,
+      })}
+    >
+      暂无结果，请移动地图选择位置
+    </p>
+  );
 
   return (
     <div
