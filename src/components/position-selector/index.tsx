@@ -76,7 +76,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   useEffect(() => {
     if (centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat))
       return;
-    if (lnglat[0] && lnglat[1]) {
+    if (lnglat[0] && lnglat[1] && !tip) {
       // @ts-ignore
       setCenter(lnglat as AMap.LngLat);
       setMarkerPosition(lnglat as AMap.LngLat);
@@ -91,7 +91,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         c && typeof c === "string" && setCity(c);
       })();
     }
-  }, [value?.lnglat, value?.location]);
+  }, [value?.lnglat, value?.location, tip]);
 
   useEffect(() => {
     if (centerPostion?.lnglat && !tip) {
