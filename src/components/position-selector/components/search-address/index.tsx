@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useRef } from "react";
-import { Input, Button } from "antd";
+import { Input, Tooltip } from "antd";
 import { AutoCompleteProps } from "@pansy/react-amap/es/auto-complete/types";
 import { PositionValue } from "../../";
 import { useMap, AutoComplete } from "@pansy/react-amap";
@@ -75,8 +75,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         const tipLoca = tip?.location;
         const point = Array.isArray(tipLoca)
           ? tipLoca
-          // @ts-ignore
-          : [tip?.lng, tip?.lat];
+          : [tip?.location?.lng || tip?.lng, tip?.location?.lat || tip?.lat];
         onChange?.({
           lnglat: point as any,
           location: loca,
@@ -131,7 +130,9 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
           handleSelect(item);
         }}
       >
-        <p>{item.name}</p>
+        <Tooltip title={item.name} placement="top">
+          <p>{item.name}</p>
+        </Tooltip>
         <p>{item.district || ""}</p>
       </div>
     );
