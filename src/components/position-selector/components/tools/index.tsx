@@ -114,6 +114,7 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, small = false }) => {
           content={themeChange}
           placement="left"
           trigger={["hover"]}
+          visible
           getPopupContainer={() => themeContent?.current as any}
         >
           <div className={classNames(`${prefixCLs}-theme`, {

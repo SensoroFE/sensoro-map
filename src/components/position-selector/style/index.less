@@ -14,6 +14,13 @@
 }
 
 .@{map-position-selector-prefix-cls} {
+  border-radius: 4px;
+
+  >div>div {
+    &:first-child {
+      border-radius: 4px;
+    }
+  }
 
   &-search-address {
     position: absolute;
@@ -375,8 +382,8 @@
 
   &-tools {
     position: absolute;
-    bottom: @padding-base;
-    right: @padding-base;
+    bottom: 12px;
+    right: 12px;
 
     .anticon {
       color: fade(#0A1B39, 60%);
@@ -404,10 +411,6 @@
     margin-bottom: 8px;
     cursor: pointer;
     .common();
-
-    &:hover {
-      background: fade(#ffff, 25%);
-    }
 
     >div {
       width: @tool-min-width;
@@ -510,4 +513,14 @@
     font-size: 32px;
   }
 
+}
+
+.ant-tooltip-inner {
+  border-radius: 4px !important;
+  background-color: rgba(10, 27, 57, 0.8) !important;
+}
+
+.ant-tooltip-arrow-content {
+  --antd-arrow-background-color: transparent;
+  background-color:  rgba(10, 27, 57, 0.8);
 }

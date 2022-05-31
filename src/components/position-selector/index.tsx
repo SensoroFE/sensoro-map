@@ -73,7 +73,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [searchList, setSearchList] = useState<any[]>([]);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
-  const prefixCls = getPrefixCls("position");
+  const prefixCls = getPrefixCls("position-selector");
 
   useEffect(() => {
     if (!map || searchIns.current) return;
