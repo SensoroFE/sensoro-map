@@ -132,7 +132,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   };
 
   const PositionIcon = (
-    <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
+    <span style={{ fontSize: 24, lineHeight: '24px'}}>{icon || <LocationPurely />}</span>
   );
 
   const handleSearchPoi = debounce((center) => {
@@ -164,6 +164,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         city={city}
         small={small}
         onChange={(v) => {
+          console.log(v);
           v?.lnglat && setMarkerPosition(v.lnglat);
           onChange?.(v);
         }}
@@ -220,7 +221,9 @@ const PositionSelector: React.FC<PositionProps> = ({
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -100%)",
+            fontSize: 24, 
+            lineHeight: "24px",
+            transform: "translate(-50%, -50%)",
           }}
         >
           {PositionIcon}
@@ -230,6 +233,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         <Marker
           position={markerPosition}
           render={() => PositionIcon}
+          offset={[0, 15]}
           {...marker}
         />
       )}

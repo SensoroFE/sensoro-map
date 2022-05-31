@@ -6,6 +6,7 @@ import { useMap, AutoComplete } from "@pansy/react-amap";
 import { usePSContext } from "../context";
 import { debounce } from "lodash";
 import classNames from "@pansy/classnames";
+import CloseOutlined from "@sensoro-design/icons/CloseOutlined";
 
 // 中英文、数字、空格、英文·、英文.、英文_，不能以空格开头
 // eslint-disable-next-line
@@ -147,6 +148,12 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     </p>
   );
 
+  const clearIcon = (
+    <div className={`${prefixCls}-clear-icon`}>
+      <CloseOutlined />
+    </div>
+  );
+
   return (
     <div
       className={classNames(prefixCls, {
@@ -178,7 +185,9 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         value={searchVal}
         style={{ width: small ? 200 : 240 }}
         size={small ? "small" : "middle"}
-        allowClear
+        allowClear={{
+          clearIcon: clearIcon,
+        }}
         placeholder="请输入地址信息"
       />
       {dropVisible && !tip && (

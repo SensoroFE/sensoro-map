@@ -25,6 +25,7 @@
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;
+      padding-right: 0;
       height: 32px;
       font-size: 12px;
       border: none;
@@ -48,6 +49,7 @@
 
     .ant-input-search>.ant-input-group>.ant-input-group-addon:last-child .ant-input-search-button {
       border: none !important;
+      color: rgba(10, 27, 57, 0.35);
     }
 
     .ant-input:focus,
@@ -81,6 +83,23 @@
   &-search-address-empty-small {
     font-size: 12px;
     line-height: 20px;
+  }
+
+  &-search-address-clear-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    font-size: 8px;
+    background-color: rgba(10, 27, 57, 0.08);
+    color: #000;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(10, 27, 57, 0.15);
+    }
   }
 
   &-search-address-dropdown {
@@ -163,6 +182,7 @@
       font-size: 14px;
       line-height: 22px;
       color: rgba(10, 27, 57, 0.8);
+      display: inline-block;
     }
 
     >p:last-child {
@@ -190,7 +210,7 @@
     padding: 5px 8px;
     font-size: 14px;
     line-height: 22px;
-    color: #0A1B39;
+    color: rgba(10, 27, 57, 0.8);
     cursor: pointer;
     .common();
 
@@ -415,6 +435,7 @@
     cursor: pointer;
     text-align: center;
     line-height: @tool-max-width;
+    color: rgba(10, 27, 57, 0.6);
     font-size: 16px;
 
     &:hover {
