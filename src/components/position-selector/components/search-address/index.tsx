@@ -35,7 +35,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     setTip,
     dropVisible,
     setDropVisible,
-    setCenterPostion,
     options,
     setOptions,
   } = usePSContext();
@@ -222,7 +221,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             className="sen-btn"
             onClick={() => {
               setTip(undefined);
-              setCenterPostion(undefined);
               onChange?.(undefined);
             }}
           >
