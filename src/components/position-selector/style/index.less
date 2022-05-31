@@ -71,6 +71,10 @@
     .ant-input-search-icon {
       padding: 0;
     }
+
+    .ant-input-affix-wrapper-disabled {
+      background-color: #F5F6F7;
+    }
   }
 
   &-search-address-small {
@@ -111,12 +115,13 @@
 
   &-search-address-dropdown {
     .common();
+    border-radius: 4px;
     position: absolute;
     width: 240px;
-    top: 36px;
+    top: 38px;
     left: 0;
     padding: 8px 0;
-    max-height: 360px;
+    max-height: 338px;
     overflow-y: overlay;
     z-index: 10;
   }
@@ -130,6 +135,8 @@
     padding: 12px;
     font-size: 12px;
     line-height: 20px;
+    top: 42px;
+    border-radius: 4px;
 
     .ant-input {
       line-height: 20px;
@@ -180,6 +187,7 @@
 
     >p {
       margin: 0;
+      max-width: 216px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -221,7 +229,7 @@
     cursor: pointer;
     .common();
 
-    .anticon {
+    .sen-icon {
       margin-left: 4px;
       color: rgba(10, 27, 57, 0.8);
     }
@@ -229,7 +237,7 @@
     &:hover {
       color: #2B6DE5;
 
-      .anticon {
+      .sen-icon {
         color: #2B6DE5;
       }
     }
@@ -241,22 +249,23 @@
   }
 
   &-city-selector-content-visible {
-    .anticon {
+    .sen-icon  {
       transform: rotate(180deg);
     }
   }
 
   &-city-selector-content-disabled {
     cursor: not-allowed;
-    background-color: #f5f5f5;
+    background-color: #F5F6F7;
   }
 
   &-city-selector-dropdown {
     .common();
     position: absolute;
-    top: 36px;
+    top: 38px;
     width: 320px;
     z-index: 1;
+    border-radius: 4px;
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;

@@ -164,7 +164,6 @@ const PositionSelector: React.FC<PositionProps> = ({
         city={city}
         small={small}
         onChange={(v) => {
-          console.log(v);
           v?.lnglat && setMarkerPosition(v.lnglat);
           onChange?.(v);
         }}

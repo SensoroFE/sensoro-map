@@ -52,7 +52,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
   useEffect(() => {
     if (!tip && city) setDropVisible(false);
-  }, [city, tip]);
+  }, [tip]);
 
   useEffect(() => {
     if (!searchVal && !tip) setDropVisible(false);
