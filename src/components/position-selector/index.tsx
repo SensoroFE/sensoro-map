@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect, useContext, useMemo } from "react";
 import classNames from "@pansy/classnames";
 import { Map, CityLocation } from "../../map";
-import { Geocoder, Marker } from "@pansy/react-amap";
+import { Marker } from "@pansy/react-amap";
 import { MapProps } from "@pansy/react-amap/es/map";
 import { MarkerProps } from "@pansy/react-amap/es/marker";
 import { ConfigContext } from "../config-provider";
 import { Tools, SearchAddress, CitySelector } from "./components";
 import { LngLatArray } from "../../map/types";
+import { POI_TYPE } from "../../common/constants";
 // @ts-ignore
 import LocationPurely from "@sensoro-design/icons/LocationPurely";
 import PSContextProvider from "./components/context";
@@ -61,88 +62,106 @@ const PositionSelector: React.FC<PositionProps> = ({
   children,
   ...rest
 }) => {
-  const mapIns = useRef<AMap.Map>();
+  const [map, setMap] = useState<AMap.Map | null>(null);
+  const searchIns = useRef<AMap.PlaceSearch>();
   const { lnglat = [] } = value || {};
   const [center, setCenter] = useState<LngLatArray>();
-  const geocoder = useRef<AMap.Geocoder>();
   const [markerPosition, setMarkerPosition] = useState<AMap.LngLat>();
   const [city, setCity] = useState<string>("");
-  const [centerPostion, setCenterPostion] = useState<PositionValue>();
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
   const [options, setOptions] = useState<any[]>([]);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
+  const prefixCls = getPrefixCls("position-selector");
 
   useEffect(() => {
-    if (centerPostion?.lnglat && isEqual(centerPostion?.lnglat, value?.lnglat))
-      return;
+    if (!map || searchIns.current) return;
+    try {
+      map?.plugin(["AMap.PlaceSearch"], () => {
+        const placeSearch = new AMap.PlaceSearch({
+          city: "全国",
+          type: POI_TYPE,
+          //@ts-ignore
+          citylimit: true,
+          pageSize: 20, // 单页显示结果条数
+          pageIndex: 1, // 页码
+        });
+        searchIns.current = placeSearch;
+      });
+    } catch (e) {
+      console.log("初始化地图Plugin-PlaceSearch失败======>", e);
+    }
+  }, [map]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    map.on("moveend", handleMapMoveEnd);
+    return () => {
+      map?.off?.("moveend", handleMapMoveEnd);
+    };
+  }, [map, tip]);
+
+  useEffect(() => {
+    if(!value?.lnglat) setTip(undefined);
+  }, [value])
+
+  useEffect(() => {
     if (lnglat[0] && lnglat[1] && !tip) {
-      // @ts-ignore
-      setCenter(lnglat as AMap.LngLat);
-      setMarkerPosition(lnglat as AMap.LngLat);
       setTip({
         name: value.location || "",
         location: lnglat,
       } as AMap.AutoComplete.Tip);
       setDropVisible(true);
+      // @ts-ignore
+      setCenter(lnglat as AMap.LngLat);
+      setMarkerPosition(lnglat as AMap.LngLat);
       /** 自动定位城市 */
       (async () => {
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
         c && typeof c === "string" && setCity(c);
       })();
-    }
+    } 
   }, [value?.lnglat, value?.location, tip]);
 
   useEffect(() => {
-    if (centerPostion?.lnglat && !tip) {
-      const p = centerPostion?.lnglat;
-      setMarkerPosition(p);
-      setTip(undefined);
-      setOptions([
-        {
-          id: Math.random(),
-          name: centerPostion.location,
-          location: centerPostion.location,
-          district: centerPostion?.district || "",
-          lng: p[0],
-          lat: p[1],
-        },
-      ]);
-      setDropVisible(true);
-      (async () => {
-        const c = (await fetchCityMsgLnglat(centerPostion.lnglat)) as string;
-        c && typeof c === "string" && city !== c && setCity(c);
-      })();
-      // onChange?.(centerPostion);
-    }
-  }, [centerPostion, tip]);
-
-  const prefixCls = getPrefixCls("position");
-
-  const PositionIcon = (
-    <span style={{ fontSize: 24 }}>{icon || <LocationPurely />}</span>
-  );
+    searchIns?.current && searchIns.current.setCity(city || "全国");
+  }, [city]);
 
   const handleMapMoveEnd = () => {
-    if (isReadOnly) return;
-    const lnglat = mapIns.current?.getCenter?.();
-    if (geocoder.current) {
-      geocoder.current.getAddress(lnglat, (status, result) => {
-        let address = "";
-        if (status === "complete" && result.regeocode) {
-          const regeocode = result.regeocode;
-          address = regeocode.formattedAddress;
-          const { city, province, district } = regeocode?.addressComponent || {};
-          let dis = `${province}${Array.isArray(city) ? "" : city}${district}`;
-          setCenterPostion({
-            lnglat: lnglat.toArray() as any,
-            location: address,
-            district: dis
-          });
-        }
-      });
-    }
+    if (isReadOnly || tip) return;
+    const lnglat = map?.getCenter?.();
+    lnglat && handleSearchPoi([lnglat.lng, lnglat.lat]);
   };
+
+  const PositionIcon = (
+    <span style={{ fontSize: 24, lineHeight: "24px" }}>
+      {icon || <LocationPurely />}
+    </span>
+  );
+
+  const handleSearchPoi = debounce((center) => {
+    if (!searchIns?.current || tip) return;
+    //@ts-ignore
+    searchIns.current.searchNearBy("", center, 500, (status, result) => {
+      if (status === "complete" && result?.info?.toLowerCase() === "ok") {
+        const list = result?.poiList?.pois || [];
+        const formatedList = list.map((i: any, idx: number) => {
+          return {
+            id: idx,
+            name: i.name,
+            location: i.location,
+            district: i?.address || "",
+            lng: i?.location?.lng,
+            lat: i?.location?.lat,
+          };
+        });
+        setOptions(formatedList);
+        //setTip(undefined);
+        setDropVisible(true);
+      }
+    });
+  }, 500);
 
   const SearchAdressDom = useMemo(() => {
     return (
@@ -155,7 +174,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         }}
       />
     );
-  }, [city, small, dropVisible]);
+  }, [city, small, options, dropVisible, tip]);
 
   return (
     <Map
@@ -165,13 +184,13 @@ const PositionSelector: React.FC<PositionProps> = ({
       center={center}
       style={style}
       zoom={zoom}
+      dragEnable={!tip}
       {...rest}
       events={{
         ...(rest?.events ?? {}),
         created: (ins) => {
-          mapIns.current = ins;
+          setMap(ins);
         },
-        moveend: handleMapMoveEnd,
       }}
     >
       <PSContextProvider
@@ -179,21 +198,12 @@ const PositionSelector: React.FC<PositionProps> = ({
         setTip={setTip}
         dropVisible={dropVisible}
         setDropVisible={setDropVisible}
-        centerPostion={centerPostion}
-        setCenterPostion={setCenterPostion}
         options={options}
         setOptions={setOptions}
       >
         {!isReadOnly && (
           <>
             {SearchAdressDom}
-            <Geocoder
-              events={{
-                created: (instance) => {
-                  geocoder.current = instance;
-                },
-              }}
-            />
             {citySelector && city && (
               <CitySelector small={small} city={city} onChange={setCity} />
             )}
@@ -215,7 +225,9 @@ const PositionSelector: React.FC<PositionProps> = ({
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -100%)",
+            fontSize: 24,
+            lineHeight: "24px",
+            transform: "translate(-50%, -50%)",
           }}
         >
           {PositionIcon}
@@ -225,6 +237,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         <Marker
           position={markerPosition}
           render={() => PositionIcon}
+          offset={[0, 15]}
           {...marker}
         />
       )}

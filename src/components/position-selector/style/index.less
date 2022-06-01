@@ -14,6 +14,13 @@
 }
 
 .@{map-position-selector-prefix-cls} {
+  border-radius: 4px;
+
+  >div>div {
+    &:first-child {
+      border-radius: 4px;
+    }
+  }
 
   &-search-address {
     position: absolute;
@@ -22,9 +29,11 @@
     transform: translateZ(0);
     box-shadow: @box-shadow-1;
     overflow: visible;
+    z-index: 12;
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;
+      padding-right: 0;
       height: 32px;
       font-size: 12px;
       border: none;
@@ -48,6 +57,7 @@
 
     .ant-input-search>.ant-input-group>.ant-input-group-addon:last-child .ant-input-search-button {
       border: none !important;
+      color: rgba(10, 27, 57, 0.35);
     }
 
     .ant-input:focus,
@@ -61,6 +71,19 @@
 
     .ant-input-search-icon {
       padding: 0;
+    }
+
+    .ant-input-affix-wrapper-disabled {
+      background-color: #F5F6F7;
+    }
+
+    .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper:focus {
+      box-shadow: none;
+      border: none !important;
+    }
+    .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
+      box-shadow: none;
+      border: none !important;
     }
   }
 
@@ -83,27 +106,79 @@
     line-height: 20px;
   }
 
+  &-search-address-clear-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    font-size: 8px;
+    background-color: rgba(10, 27, 57, 0.08);
+    color: #000;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(10, 27, 57, 0.15);
+    }
+  }
+
   &-search-address-dropdown {
     .common();
+    border-radius: 4px;
     position: absolute;
     width: 240px;
-    top: 36px;
+    top: 38px;
     left: 0;
     padding: 8px 0;
-    max-height: 480px;
+    max-height: 338px;
     overflow-y: overlay;
     z-index: 10;
+    >p {
+      margin: 0;
+      color: rgba(10, 27, 57, 0.6);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #fff;
+    }
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(10, 27, 57, 0.35);
+      width: 4px;
+      border-radius: 4px;
+      // border-color: transparent;
+      // border-width: 4px;
+      // box-sizing: border-box;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(10, 27, 57, 0.6);
+      }
+    }
   }
 
   &-search-address-dropdown-small {
     max-height: 240px;
-    width: 200px;
+    top: 32px !important;
+    width: 200px !important;
+
+    >p {
+      font-size: 12px;
+      line-height: 20px;
+    }
   }
 
   &-search-address-dropdown-tip {
     padding: 12px;
     font-size: 12px;
     line-height: 20px;
+    top: 42px;
+    border-radius: 4px;
+    width: 344px;
 
     .ant-input {
       line-height: 20px;
@@ -137,6 +212,7 @@
     }
 
     .sen-btn {
+      padding: 2px 8px;
       width: 40px;
       display: flex;
       align-items: center;
@@ -144,7 +220,17 @@
       border-radius: 2px;
       background-color: rgba(10, 27, 57, 0.04);
       color: rgba(10, 27, 57, 1);
+      font-size: 12px;
+      line-height: 20px;
       cursor: pointer;
+
+      &:active {
+        background-color: rgba(10, 27, 57, 0.15);
+      }
+
+      &:hover {
+        background-color: rgba(10, 27, 57, 0.08);
+      }
     }
   }
 
@@ -154,6 +240,7 @@
 
     >p {
       margin: 0;
+      max-width: 216px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -163,6 +250,7 @@
       font-size: 14px;
       line-height: 22px;
       color: rgba(10, 27, 57, 0.8);
+      display: inline-block;
     }
 
     >p:last-child {
@@ -173,6 +261,12 @@
 
     &:hover {
       background-color: rgba(10, 27, 57, 0.04)
+    }
+  }
+
+  &-search-address-dropdown-item-small {
+    >p {
+      max-width: 180px;
     }
   }
 
@@ -190,11 +284,11 @@
     padding: 5px 8px;
     font-size: 14px;
     line-height: 22px;
-    color: #0A1B39;
+    color: rgba(10, 27, 57, 0.8);
     cursor: pointer;
     .common();
 
-    .anticon {
+    .sen-icon {
       margin-left: 4px;
       color: rgba(10, 27, 57, 0.8);
     }
@@ -202,7 +296,7 @@
     &:hover {
       color: #2B6DE5;
 
-      .anticon {
+      .sen-icon {
         color: #2B6DE5;
       }
     }
@@ -214,22 +308,23 @@
   }
 
   &-city-selector-content-visible {
-    .anticon {
+    .sen-icon  {
       transform: rotate(180deg);
     }
   }
 
   &-city-selector-content-disabled {
     cursor: not-allowed;
-    background-color: #f5f5f5;
+    background-color: #F5F6F7;
   }
 
   &-city-selector-dropdown {
     .common();
     position: absolute;
-    top: 36px;
+    top: 38px;
     width: 320px;
     z-index: 1;
+    border-radius: 4px;
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;
@@ -297,6 +392,31 @@
       border-radius: 0 0 2px 2px;
       max-height: 280px;
       overflow-y: overlay;
+
+      &::-webkit-scrollbar-track {
+        background-color: #fff;
+        padding:4px;
+        width: 16px;
+      }
+
+      &::-webkit-scrollbar,
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(10, 27, 57, 0.35);
+        width: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: rgba(10, 27, 57, 0.6);
+        }
+      }
+    }
+  }
+
+  &-city-selector-dropdown-small {
+    top: 32px !important;
+    >div:last-child {
+      max-height: 192px;
     }
   }
 
@@ -355,8 +475,8 @@
 
   &-tools {
     position: absolute;
-    bottom: @padding-base;
-    right: @padding-base;
+    bottom: 12px;
+    right: 12px;
 
     .anticon {
       color: fade(#0A1B39, 60%);
@@ -385,10 +505,6 @@
     cursor: pointer;
     .common();
 
-    &:hover {
-      background: fade(#ffff, 25%);
-    }
-
     >div {
       width: @tool-min-width;
       height: @tool-min-width;
@@ -415,6 +531,7 @@
     cursor: pointer;
     text-align: center;
     line-height: @tool-max-width;
+    color: rgba(10, 27, 57, 0.6);
     font-size: 16px;
 
     &:hover {
@@ -489,4 +606,14 @@
     font-size: 32px;
   }
 
+}
+
+.ant-tooltip-inner {
+  border-radius: 4px !important;
+  background-color: rgba(10, 27, 57, 0.8) !important;
+}
+
+.ant-tooltip-arrow-content {
+  --antd-arrow-background-color: transparent;
+  background-color:  rgba(10, 27, 57, 0.8);
 }

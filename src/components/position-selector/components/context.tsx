@@ -6,8 +6,6 @@ interface PSContextData {
   setTip: (tip: AMap.AutoComplete.Tip) => void;
   dropVisible: boolean;
   setDropVisible: (visible: boolean) => void;
-  centerPostion: PositionValue;
-  setCenterPostion: (position: PositionValue) => void;
   options: any[];
   setOptions: (opt: any[]) => void;
 }

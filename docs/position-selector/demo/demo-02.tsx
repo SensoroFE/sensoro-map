@@ -7,7 +7,7 @@ export default () => {
       onChange={(val) => {
         console.info("=====>坐标change", val);
       }}
-      style={{ width: 400, height: 300 }}
+      style={{ width: 600, height: 296 }}
       small
     />
   );

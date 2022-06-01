@@ -6,6 +6,7 @@ import { useMap, AutoComplete } from "@pansy/react-amap";
 import { usePSContext } from "../context";
 import { debounce } from "lodash";
 import classNames from "@pansy/classnames";
+import CloseOutlined from "@sensoro-design/icons/CloseOutlined";
 
 // 中英文、数字、空格、英文·、英文.、英文_，不能以空格开头
 // eslint-disable-next-line
@@ -35,7 +36,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     setTip,
     dropVisible,
     setDropVisible,
-    setCenterPostion,
     options,
     setOptions,
   } = usePSContext();
@@ -51,12 +51,12 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
   }, [city]);
 
   useEffect(() => {
-    if (!tip && city) setDropVisible(false);
+    if (city && !tip) setDropVisible(false);
   }, [city, tip]);
 
   useEffect(() => {
-    if (!searchVal && !tip) setDropVisible(false);
-  }, [searchVal, tip]);
+    if (!searchVal) setDropVisible(false);
+  }, [searchVal]);
 
   useEffect(
     debounce(() => {
@@ -126,7 +126,9 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     return (
       <div
         key={item.id}
-        className={`${prefixCls}-dropdown-item`}
+        className={classNames(`${prefixCls}-dropdown-item`, {
+          [`${prefixCls}-dropdown-item-small`]: !!small,
+        })}
         onClick={() => {
           handleSelect(item);
         }}
@@ -147,6 +149,12 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     >
       暂无结果，请移动地图选择位置
     </p>
+  );
+
+  const clearIcon = (
+    <div className={`${prefixCls}-clear-icon`}>
+      <CloseOutlined />
+    </div>
   );
 
   return (
@@ -180,7 +188,9 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
         value={searchVal}
         style={{ width: small ? 200 : 240 }}
         size={small ? "small" : "middle"}
-        allowClear
+        allowClear={{
+          clearIcon: clearIcon,
+        }}
         placeholder="请输入地址信息"
       />
       {dropVisible && !tip && (
@@ -189,7 +199,14 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             [`${prefixCls}-dropdown-small`]: !!small,
           })}
         >
-          {options.length ? <>{options.map((i) => renderItem(i))}</> : empty}
+          {options.length ? (
+            <>
+              <p style={{ marginLeft: 12, marginBottom: 4 }}>位置推荐</p>
+              {options.map((i) => renderItem(i))}
+            </>
+          ) : (
+            empty
+          )}
         </div>
       )}
       {dropVisible && tip && (
@@ -208,7 +225,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
               setLoca(e.target.value);
             }}
             size="small"
-            style={{ width: small ? 176 : 216 }}
+            style={{ width: small ? 176 : 320 }}
             className={classNames({
               ["input-error"]: !!errorMsg,
             })}
@@ -223,7 +240,6 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             className="sen-btn"
             onClick={() => {
               setTip(undefined);
-              setCenterPostion(undefined);
               onChange?.(undefined);
             }}
           >

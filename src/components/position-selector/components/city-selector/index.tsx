@@ -104,7 +104,9 @@ const CitySelector: FC<CitySelectorProps> = (props) => {
         <CaretDownOutlined />
       </div>
       {visible && (
-        <div className={`${prefixCls}-dropdown`}>
+        <div className={classNames(`${prefixCls}-dropdown`, {
+          [`${prefixCls}-dropdown-small`]:!!small
+        })}>
           <div className={`${prefixCls}-dropdown-title`}>
             <div>
               当前城市
