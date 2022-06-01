@@ -129,7 +129,6 @@ const PositionSelector: React.FC<PositionProps> = ({
   }, [city]);
 
   const handleMapMoveEnd = () => {
-    console.log('tip', tip)
     if (isReadOnly || tip) return;
     const lnglat = map?.getCenter?.();
     lnglat && handleSearchPoi([lnglat.lng, lnglat.lat]);
