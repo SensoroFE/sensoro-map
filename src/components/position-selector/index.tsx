@@ -70,7 +70,6 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [city, setCity] = useState<string>("");
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
   const [options, setOptions] = useState<any[]>([]);
-  const [searchList, setSearchList] = useState<any[]>([]);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
   const { getPrefixCls } = useContext(ConfigContext);
   const prefixCls = getPrefixCls("position-selector");
@@ -96,43 +95,50 @@ const PositionSelector: React.FC<PositionProps> = ({
 
   useEffect(() => {
     if (!map) return;
+
     map.on("moveend", handleMapMoveEnd);
     return () => {
       map?.off?.("moveend", handleMapMoveEnd);
     };
-  }, [map, tip])
+  }, [map, tip]);
+
+  useEffect(() => {
+    if(!value?.lnglat) setTip(undefined);
+  }, [value])
 
   useEffect(() => {
     if (lnglat[0] && lnglat[1] && !tip) {
-      // @ts-ignore
-      setCenter(lnglat as AMap.LngLat);
-      setMarkerPosition(lnglat as AMap.LngLat);
       setTip({
         name: value.location || "",
         location: lnglat,
       } as AMap.AutoComplete.Tip);
       setDropVisible(true);
+      // @ts-ignore
+      setCenter(lnglat as AMap.LngLat);
+      setMarkerPosition(lnglat as AMap.LngLat);
       /** 自动定位城市 */
       (async () => {
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
         c && typeof c === "string" && setCity(c);
       })();
-    }
+    } 
   }, [value?.lnglat, value?.location, tip]);
 
   useEffect(() => {
     searchIns?.current && searchIns.current.setCity(city || "全国");
   }, [city]);
 
-
   const handleMapMoveEnd = () => {
-    if (isReadOnly) return;
+    console.log('tip', tip)
+    if (isReadOnly || tip) return;
     const lnglat = map?.getCenter?.();
     lnglat && handleSearchPoi([lnglat.lng, lnglat.lat]);
   };
 
   const PositionIcon = (
-    <span style={{ fontSize: 24, lineHeight: '24px'}}>{icon || <LocationPurely />}</span>
+    <span style={{ fontSize: 24, lineHeight: "24px" }}>
+      {icon || <LocationPurely />}
+    </span>
   );
 
   const handleSearchPoi = debounce((center) => {
@@ -152,7 +158,7 @@ const PositionSelector: React.FC<PositionProps> = ({
           };
         });
         setOptions(formatedList);
-        setTip(undefined);
+        //setTip(undefined);
         setDropVisible(true);
       }
     });
@@ -220,7 +226,7 @@ const PositionSelector: React.FC<PositionProps> = ({
             position: "absolute",
             top: "50%",
             left: "50%",
-            fontSize: 24, 
+            fontSize: 24,
             lineHeight: "24px",
             transform: "translate(-50%, -50%)",
           }}
