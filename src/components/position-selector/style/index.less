@@ -29,6 +29,7 @@
     transform: translateZ(0);
     box-shadow: @box-shadow-1;
     overflow: visible;
+    z-index: 12;
 
     .ant-input-affix-wrapper {
       padding: 2px 8px;
@@ -124,11 +125,24 @@
     max-height: 338px;
     overflow-y: overlay;
     z-index: 10;
+
+    >p {
+      margin: 0;
+      color: rgba(10, 27, 57, 0.6);
+      font-size: 14px;
+      line-height: 22px;
+    }
   }
 
   &-search-address-dropdown-small {
     max-height: 240px;
-    width: 200px;
+    top: 32px !important;
+    width: 200px !important;
+
+    >p {
+      font-size: 12px;
+      line-height: 20px;
+    }
   }
 
   &-search-address-dropdown-tip {
@@ -137,6 +151,7 @@
     line-height: 20px;
     top: 42px;
     border-radius: 4px;
+    width: 344px;
 
     .ant-input {
       line-height: 20px;
@@ -170,6 +185,7 @@
     }
 
     .sen-btn {
+      padding: 2px 8px;
       width: 40px;
       display: flex;
       align-items: center;
@@ -177,7 +193,17 @@
       border-radius: 2px;
       background-color: rgba(10, 27, 57, 0.04);
       color: rgba(10, 27, 57, 1);
+      font-size: 12px;
+      line-height: 20px;
       cursor: pointer;
+
+      &:active {
+        background-color: rgba(10, 27, 57, 0.15);
+      }
+
+      &:hover {
+        background-color: rgba(10, 27, 57, 0.08);
+      }
     }
   }
 
@@ -208,6 +234,12 @@
 
     &:hover {
       background-color: rgba(10, 27, 57, 0.04)
+    }
+  }
+
+  &-search-address-dropdown-item-small {
+    >p {
+      max-width: 180px;
     }
   }
 
