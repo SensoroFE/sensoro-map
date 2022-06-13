@@ -203,7 +203,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             [`${prefixCls}-dropdown-small`]: !!small,
           })}
           style={{
-            width: !options.length && small ? 200 : 240,
+            width: small ? 200 : 240,
             ...(small && fromSearch ? {
               top: 30
             } : {}),
