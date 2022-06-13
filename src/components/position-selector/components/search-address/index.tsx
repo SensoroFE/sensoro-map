@@ -38,6 +38,8 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
     setDropVisible,
     options,
     setOptions,
+    fromSearch,
+    setFromSearch,
   } = usePSContext();
 
   const handleMapEvents = () => {
@@ -56,6 +58,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
 
   useEffect(() => {
     if (!searchVal) setDropVisible(false);
+    setFromSearch(true);
   }, [searchVal]);
 
   useEffect(
@@ -146,6 +149,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       className={classNames(`${prefixCls}-empty`, {
         [`${prefixCls}-empty-small`]: !!small,
       })}
+      style={{ width: small ? 200 : 240 }}
     >
       暂无结果，请移动地图选择位置
     </p>
@@ -196,12 +200,21 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
       {dropVisible && !tip && (
         <div
           className={classNames(`${prefixCls}-dropdown`, {
+            [`${prefixCls}-dropdown-no-search`]: !fromSearch,
             [`${prefixCls}-dropdown-small`]: !!small,
           })}
+          style={{
+            width: small ? 200 : 240,
+            ...(small && fromSearch ? {
+              top: 30
+            } : {}),
+          }}
         >
           {options.length ? (
             <>
-              <p style={{ marginLeft: 12, marginBottom: 4 }}>位置推荐</p>
+              {!fromSearch && (
+                <p style={{ marginLeft: 12, marginBottom: 4 }}>位置推荐</p>
+              )}
               {options.map((i) => renderItem(i))}
             </>
           ) : (
@@ -215,7 +228,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
             `${prefixCls}-dropdown`,
             `${prefixCls}-dropdown-tip`,
             {
-              [`${prefixCls}-dropdown-small`]: !!small,
+              [`${prefixCls}-dropdown-tip-small`]: !!small,
             }
           )}
         >
@@ -225,7 +238,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
               setLoca(e.target.value);
             }}
             size="small"
-            style={{ width: small ? 176 : 320 }}
+            style={{ width: 320 }}
             className={classNames({
               ["input-error"]: !!errorMsg,
             })}
