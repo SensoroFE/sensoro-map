@@ -109,11 +109,10 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, small = false }) => {
 
   return (
     <div className={prefixCLs} ref={themeContent as any}>
-      <Tooltip title="切换主题">
+      <Tooltip title="切换主题" visible>
         <Popover
           content={themeChange}
           placement="left"
-          visible
           trigger={["hover"]}
           getPopupContainer={() => themeContent?.current as any}
         >

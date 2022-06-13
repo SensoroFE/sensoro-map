@@ -8,6 +8,8 @@ interface PSContextData {
   setDropVisible: (visible: boolean) => void;
   options: any[];
   setOptions: (opt: any[]) => void;
+  fromSearch: boolean;
+  setFromSearch: (c:boolean) => void;
 }
 
 export const PSContext = createContext<PSContextData>({} as PSContextData);

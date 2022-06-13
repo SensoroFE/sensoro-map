@@ -143,6 +143,7 @@
 
     &::-webkit-scrollbar-track {
       background-color: #fff;
+      border-radius: 4px;
     }
 
     &::-webkit-scrollbar,
@@ -161,10 +162,23 @@
     }
   }
 
+  &-search-address-dropdown-no-search {
+    top: 42px;
+  }
+
   &-search-address-dropdown-small {
     max-height: 240px;
-    top: 32px !important;
+    top: 34px;
 
+    >p {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+
+  &-search-address-dropdown-tip-small {
+    max-height: 240px;
+    top: 34px !important;
     >p {
       font-size: 12px;
       line-height: 20px;
@@ -315,6 +329,14 @@
   &-city-selector-content-disabled {
     cursor: not-allowed;
     background-color: #F5F6F7;
+
+    &:hover {
+      color: rgba(10, 27, 57, 0.8);
+
+      .sen-icon {
+        color: rgba(10, 27, 57, 0.8);
+      }
+    }
   }
 
   &-city-selector-dropdown {
@@ -396,6 +418,7 @@
         background-color: #fff;
         padding:4px;
         width: 16px;
+        border-radius: 4px;
       }
 
       &::-webkit-scrollbar,
@@ -559,7 +582,7 @@
       padding: 4px;
       cursor: pointer;
       background: #fff;
-      
+
       &:last-child {
         padding-left: 0;
       }
@@ -609,7 +632,13 @@
 
 .ant-tooltip-inner {
   border-radius: 4px !important;
+  box-shadow: none;
   background-color: rgba(10, 27, 57, 0.8) !important;
+}
+
+.ant-tooltip-placement-top .ant-tooltip-arrow-content {
+  border: none;
+  box-shadow: none;
 }
 
 .ant-tooltip-arrow-content {
