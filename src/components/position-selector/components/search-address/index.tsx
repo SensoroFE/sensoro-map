@@ -224,7 +224,7 @@ const SearchAddress: FC<SearchAddressProps> = (props) => {
               setLoca(e.target.value);
             }}
             size="small"
-            style={{ width: small ? 176 : 320 }}
+            style={{ width: 320 }}
             className={classNames({
               ["input-error"]: !!errorMsg,
             })}

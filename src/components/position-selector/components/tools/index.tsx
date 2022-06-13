@@ -113,6 +113,7 @@ export const Tools: FC<ToolsProps> = ({ prefixCLs, small = false }) => {
         <Popover
           content={themeChange}
           placement="left"
+          visible
           trigger={["hover"]}
           getPopupContainer={() => themeContent?.current as any}
         >
