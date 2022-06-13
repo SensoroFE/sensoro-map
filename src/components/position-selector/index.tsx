@@ -71,6 +71,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   const [tip, setTip] = useState<AMap.AutoComplete.Tip | undefined>(undefined);
   const [options, setOptions] = useState<any[]>([]);
   const [dropVisible, setDropVisible] = useState<boolean>(!!value?.lnglat);
+  const [fromSearch, setFromSearch] = useState<boolean>(false);
   const { getPrefixCls } = useContext(ConfigContext);
   const prefixCls = getPrefixCls("position-selector");
 
@@ -103,8 +104,8 @@ const PositionSelector: React.FC<PositionProps> = ({
   }, [map, tip]);
 
   useEffect(() => {
-    if(!value?.lnglat) setTip(undefined);
-  }, [value])
+    if (!value?.lnglat) setTip(undefined);
+  }, [value]);
 
   useEffect(() => {
     if (lnglat[0] && lnglat[1] && !tip) {
@@ -121,7 +122,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         const c = (await fetchCityMsgLnglat(lnglat)) as string;
         c && typeof c === "string" && setCity(c);
       })();
-    } 
+    }
   }, [value?.lnglat, value?.location, tip]);
 
   useEffect(() => {
@@ -158,6 +159,7 @@ const PositionSelector: React.FC<PositionProps> = ({
         });
         setOptions(formatedList);
         //setTip(undefined);
+        setFromSearch(false);
         setDropVisible(true);
       }
     });
@@ -200,6 +202,8 @@ const PositionSelector: React.FC<PositionProps> = ({
         setDropVisible={setDropVisible}
         options={options}
         setOptions={setOptions}
+        fromSearch={fromSearch}
+        setFromSearch={setFromSearch}
       >
         {!isReadOnly && (
           <>
