@@ -95,6 +95,7 @@ const PositionSelector: React.FC<PositionProps> = ({
   }, [map]);
 
   useEffect(() => {
+    // @ts-ignore
     if (!map) return;
 
     map.on("moveend", handleMapMoveEnd);
