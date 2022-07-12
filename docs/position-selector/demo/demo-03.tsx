@@ -26,7 +26,12 @@ export default () => {
 
   return (
     <div>
-      <Form layout="vertical" form={form}>
+      <Form layout="vertical" form={form} initialValues={{
+        position: {
+          lnglat: [116.905163, 40.006047],
+          location: "河北省廊坊市三河市高楼镇三河福成酿酒有限公司",
+        },
+      }} >
         <Form.Item
           label="位置信息"
           name="position"
